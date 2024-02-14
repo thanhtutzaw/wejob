@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import TheWelcome from '../components/TheWelcome.vue'
-const title = ref("WeJob")
+// import TheWelcome from '../components/TheWelcome.vue'
+const title = ref("wonJob")
 const toggle = ref(false)
 function toggleTitle() {
-  title.value = toggle.value ? "WeJob" : "Let's Go"
+  title.value = toggle.value ? "wonJob" : "Let's Go"
   toggle.value = !toggle.value;
 }
 </script>
