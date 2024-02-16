@@ -1,0 +1,28 @@
+
+# Node.js dependencies
+node_modules/
+
+# macOS files
+.DS_Store
+
+# Environment variables file
+.env
+.env.dev
+
+# Log files
+*.log
+
+# IDE and editor files
+.vscode/
+.idea/
+*.iml
+
+# Compiled binary files
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Dependency directories
+/jspm_packages/
+/bower_components/
