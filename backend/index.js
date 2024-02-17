@@ -5,7 +5,11 @@ const { Collection } = require("mongoose");
 var cors = require("cors");
 const multer = require("multer");
 var app = Express();
-app.use(cors());
+const corsOptions = {
+  // origin: "http://localhost:3000" // frontend URI (ReactJS)
+  origin: "https://wonjob.vercel.app" // frontend URI (ReactJS)
+}
+app.use(cors(corsOptions));
 const CONNECTION_STRING = process.env.MONGO_ATLAS_URL;
 const DB_NAME = "wonjobDB";
 const job_posts = "job_posts";

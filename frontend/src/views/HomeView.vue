@@ -9,14 +9,16 @@ function toggleTitle() {
   toggle.value = !toggle.value;
 }
 const jobLists : Ref<{title:string; _id:string}[]> = ref([])
+// const backendURL = `http://localhost:5038`;
+const backendURL = `https://wonjob-backend.vercel.app`;
 async function getJobLists() {
-  let newLists = await fetch('http://localhost:5038/api/job_posts').then(res => res.json());
+  let newLists = await fetch(`${backendURL}/api/job_posts`).then(res => res.json());
   console.log(newLists);
   jobLists.value = newLists;
 }
 async function deleteLists(_id:string | number) {
   jobLists.value = jobLists.value.filter(j => j._id !== _id)
-  await fetch('http://localhost:5038/api/job_posts?id='+_id, {method:"DELETE"})
+  await fetch(`${backendURL}/api/job_posts?id=`+_id, {method:"DELETE"})
   // await getJobLists();
 }
 async function addLists(e: Event) {
@@ -24,7 +26,7 @@ async function addLists(e: Event) {
   // console.log(formData);
   console.log(e);
   console.log(jobTitle);
-  await fetch(`http://localhost:5038/api/job_posts?title=${jobTitle.value}`, {method:"POST" , headers: {
+  await fetch(`${backendURL}/api/job_posts?title=${jobTitle.value}`, {method:"POST" , headers: {
       "Content-Type": "application/json",
     },
   } )
