@@ -7,7 +7,6 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
 .DS_Store
 dist
 dist-ssr
@@ -17,6 +16,39 @@ coverage
 /cypress/videos/
 /cypress/screenshots/
 
+build
+
+# Node.js dependencies
+node_modules/
+
+# macOS files
+.DS_Store
+
+# Environment variables file
+.env
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Log files
+*.log
+
+# IDE and editor files
+.vscode/
+.idea/
+*.iml
+
+# Compiled binary files
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Dependency directories
+/jspm_packages/
+/bower_components/
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
