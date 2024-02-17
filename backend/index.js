@@ -22,6 +22,7 @@ const job_posts = "job_posts";
 //     }
 // });
 let db;
+const URL = `https://wonjob-backend.vercel.app/api`
 app.listen(5038, () => {
   MongoClient.connect(CONNECTION_STRING, (error, client) => {
     if (error) {
@@ -29,7 +30,7 @@ app.listen(5038, () => {
     } else {
       db = client.db(DB_NAME);
       console.log("DB Success");
-      app.get(`/api/${job_posts}`, async (req, res) => {
+      app.get(`${URL}/${job_posts}`, async (req, res) => {
         let collection = await db.collection(job_posts);
         try {
           let results = await collection.find({}).limit(50).toArray();
@@ -38,7 +39,7 @@ app.listen(5038, () => {
           res.status(500).send('Internal Server Error' + error);
         }
       });
-      app.post(`/api/${job_posts}`, multer().none(), async (req, res) => {
+      app.post(`${URL}/${job_posts}`, multer().none(), async (req, res) => {
         let collection = await db.collection(job_posts);
         const newData = {
           title: String(req.query.title) ?? "",
@@ -46,14 +47,14 @@ app.listen(5038, () => {
         let results = await collection.insertOne(newData);
         res.send("Added List Successfully : " + results).status(200);
       });
-      app.delete(`/api/${job_posts}`, async (req, res) => {
+      app.delete(`${URL}/${job_posts}`, async (req, res) => {
         console.log("myreqId " + req.query.id);
         let collection = await db.collection(job_posts);
         const query = { _id: ObjectId(req.query.id) };
         let results = await collection.deleteOne(query);
         res.send("Deleted Successfully : id - " + req.query.id).status(200);
       });
-      // app.patch(`/api/${job_posts}/add`, multer().none(), async (req, res) => {
+      // app.patch(`${URL}/${job_posts}/add`, multer().none(), async (req, res) => {
       //   let collection = await db.collection(job_posts);
       //   const newData = {
       //     id: String(await collection.estimatedDocumentCount() + 1),
