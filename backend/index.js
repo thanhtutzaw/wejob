@@ -1,11 +1,22 @@
 require("dotenv").config();
 const Express = require("express");
 const app = Express();
-
+const CONNECTION_STRING = process.env.MONGO_ATLAS_URL;
+const DB_NAME = "wonjobDB"
 const port = process.env.PORT || 5000;
+const job_posts = "job_posts"
 app.listen(port, () => {
   console.log(`Listening: http://localhost:${port}`);
-
+  app.get('/', (req, res) => {
+    res.json({
+      message: `Hello Won Job API listening on ${port} , ${CONNECTION_STRING} .`,
+    });
+  });
+  app.get('/api', (req, res) => {
+    res.json({
+      api_routes: ["/api/job_posts", "/api/job_posts2"],
+    });
+  });
   MongoClient.connect(CONNECTION_STRING, (error, client) => {
     if (error) {
       console.error("Error connecting to database:", error);
@@ -13,11 +24,7 @@ app.listen(port, () => {
       console.log(process.env.NODE_ENV);
       database = client.db(DB_NAME);
       console.log("DB Success  " + "\x1b[0m" + "\x1b[46m" + "➜ " + "\x1b[0m" + " Local:   http://localhost:5038");
-      app.get('/', (req, res) => {
-        res.json({
-          message: `Hello Won Job API listening on ${port} . DB Connected Successfully.`,
-        });
-      });
+
       app.get('/api', (req, res) => {
         res.json({
           api_routes: ["/api/job_posts", "/api/job_posts2"],
