@@ -4,6 +4,20 @@
   --primary-color: rgb(0 140 141);
 }
 
+button {
+  min-width : 75px;
+  cursor    : pointer;
+  min-height: 40px;
+
+  &:hover {
+    opacity: .9;
+  }
+
+  &:active {
+    opacity: .7;
+  }
+}
+
 #app {
   max-width  : 1280px;
   margin     : 0 auto;

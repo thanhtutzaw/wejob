@@ -9,7 +9,8 @@ const corsOptions = {
   // origin: "http://localhost:3000" // frontend URI (ReactJS)
   origin: "https://wonjob.vercel.app" // frontend URI (ReactJS)
 }
-app.use(cors(corsOptions));
+app.use(Express.json());
+app.use(cors());
 const CONNECTION_STRING = process.env.MONGO_ATLAS_URL;
 const DB_NAME = "wonjobDB";
 const job_posts = "job_posts";
@@ -21,17 +22,32 @@ const job_posts = "job_posts";
 //         deprecationErrors: true,
 //     }
 // });
-let db;
-const URL = `https://wonjob-backend.vercel.app/api`
-app.listen(5038, () => {
+let URL = ''
+if (process.env.NODE_ENV === 'development') {
+  URL = 5038
+  // Code specific to development environment
+  console.log('Running in development mode');
+} else if (process.env.NODE_ENV === 'production') {
+  // Code specific to production environment
+  URL = "https://wonjob-backend.vercel.app"
+  console.log('Running in production mode');
+}
+let database;
+// const port = true ? 5038 : "https://wonjob-backend.vercel.app"
+// const URL = `http://localhost:5038`
+// const URL = `https://wonjob-backend.vercel.app/api`
+app.listen(URL, () => {
   MongoClient.connect(CONNECTION_STRING, (error, client) => {
     if (error) {
       console.error("Error connecting to database:", error);
     } else {
-      db = client.db(DB_NAME);
-      console.log("DB Success");
-      app.get(`${URL}/${job_posts}`, async (req, res) => {
-        let collection = await db.collection(job_posts);
+
+      console.log(process.env.NODE_ENV);
+
+      database = client.db(DB_NAME);
+      console.log("DB Success  " + "\x1b[0m" + "\x1b[46m" + "➜ " + "\x1b[0m" + " Local:   http://localhost:5038");
+      app.get(`/api/${job_posts}`, async (req, res) => {
+        let collection = await database.collection(job_posts);
         try {
           let results = await collection.find({}).limit(50).toArray();
           res.send(results).status(200);
@@ -39,22 +55,25 @@ app.listen(5038, () => {
           res.status(500).send('Internal Server Error' + error);
         }
       });
-      app.post(`${URL}/${job_posts}`, multer().none(), async (req, res) => {
-        let collection = await db.collection(job_posts);
+      app.post(`/api/${job_posts}`, async (req, res) => {
+        let collection = await database.collection(job_posts);
+        console.log("Request Body:  " + req.body ? JSON.stringify(req.body) : req.body)
+        const body = req.body
         const newData = {
           title: String(req.query.title) ?? "",
+          ...body
         };
         let results = await collection.insertOne(newData);
         res.send("Added List Successfully : " + results).status(200);
       });
-      app.delete(`${URL}/${job_posts}`, async (req, res) => {
+      app.delete(`/api/${job_posts}`, async (req, res) => {
         console.log("myreqId " + req.query.id);
-        let collection = await db.collection(job_posts);
+        let collection = await database.collection(job_posts);
         const query = { _id: ObjectId(req.query.id) };
         let results = await collection.deleteOne(query);
         res.send("Deleted Successfully : id - " + req.query.id).status(200);
       });
-      // app.patch(`${URL}/${job_posts}/add`, multer().none(), async (req, res) => {
+      // app.patch(`/api/${job_posts}/add`, multer().none(), async (req, res) => {
       //   let collection = await db.collection(job_posts);
       //   const newData = {
       //     id: String(await collection.estimatedDocumentCount() + 1),
