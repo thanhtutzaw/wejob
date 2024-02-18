@@ -11,7 +11,6 @@ function toggleTitle() {
   toggle.value = !toggle.value;
 }
 const jobLists : Ref<{title:string; _id:string}[]> = ref([])
-// const backendURL = `http://localhost:5038`;
 const localBackendURL = `http://localhost:5038`;
 const productionBackendURL = `https://wonjob-backend.vercel.app`;
 const Backend_URL = import.meta.env.DEV && !import.meta.env.PROD ?  localBackendURL : productionBackendURL
