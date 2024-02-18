@@ -9,7 +9,10 @@ const port = process.env.PORT || 5000;
 const job_posts = "job_posts";
 // let database;
 app.use(Express.json())
-app.use(cors())
+const corsOptions = {
+  origin: "https://wonjob.vercel.app"
+}
+app.use(cors(corsOptions))
 const client = new MongoClient(CONNECTION_STRING, {
   monitorCommands: true,
 });
