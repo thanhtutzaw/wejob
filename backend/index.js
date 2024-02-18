@@ -27,7 +27,7 @@ client = new MongoClient(CONNECTION_STRING, {
   monitorCommands: true,
 });
 
-await client.connect();
+// await client.connect();
 app.listen(port, () => {
   console.log(`Listening: http://localhost:${port}`);
   // client.on("commandStarted", (started) => console.log(started));
