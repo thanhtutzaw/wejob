@@ -67,7 +67,7 @@ app.get("/api", (req, res) => {
   });
 });
 app.get(`/api/${job_posts}`, async (req, res) => {
-  // let collection = client.db(DB_NAME).collection(job_posts);
+  let collection = client.db(DB_NAME).collection(job_posts);
   res.send("jobPosts");
   // try {
   //   let results = await collection.find({}).limit(50).toArray();
