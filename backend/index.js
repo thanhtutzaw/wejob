@@ -11,6 +11,11 @@ app.get('/', (req, res) => {
     message: `Hello WonJob Backend API Works ${port}`,
   });
 });
+app.get('/api', (req, res) => {
+  res.json({
+    api_routes: ["/api/job_posts", "/api/job_posts2"],
+  });
+});
 app.get('/api/job_posts', (req, res) => {
   res.json({
     message: `job_posts from index Hello WonJob Backend API Works ${port}`,
