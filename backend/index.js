@@ -36,7 +36,6 @@ app.listen(port, () => {
   // });
   // console.error("Error connecting to database:", error);
   console.log(process.env.NODE_ENV);
-  // database = client?.db(DB_NAME);
   console.log(
     "DB Success  " +
     "\x1b[0m" +
@@ -45,7 +44,15 @@ app.listen(port, () => {
     "\x1b[0m" +
     " Local:   http://localhost:5038"
   );
-
+  // app.get(`/api/${job_posts}`, async (req, res) => {
+  //   try {
+  //     let collection = client.db(DB_NAME).collection(job_posts);
+  //     let results = await collection.find({}).limit(50).toArray();
+  //     res.send(results).status(200);
+  //   } catch (error) {
+  //     res.status(500).send("Internal Server Error" + error);
+  //   }
+  // });
   // app.post(`/api/${job_posts}`, async (req, res) => {
   //   let collection = job_posts_collection;
   //   console.log(
