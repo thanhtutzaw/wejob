@@ -7,6 +7,8 @@ const DB_NAME = "wonjobDB";
 const port = process.env.PORT || 5000;
 const job_posts = "job_posts";
 // let database;
+app.use(Express.json())
+app.use(cors())
 const client = new MongoClient(CONNECTION_STRING, {
   monitorCommands: true,
 });
