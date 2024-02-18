@@ -36,7 +36,7 @@ let database;
 // const port = true ? 5038 : "https://wonjob-backend.vercel.app"
 // const URL = `http://localhost:5038`
 // const URL = `https://wonjob-backend.vercel.app/api`
-app.listen(URL, () => {
+app.listen(5038, () => {
   MongoClient.connect(CONNECTION_STRING, (error, client) => {
     if (error) {
       console.error("Error connecting to database:", error);
