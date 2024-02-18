@@ -110,6 +110,9 @@ onUnmounted(()=>{
   justify-content: space-between;
 }}
 form.jobForm{
+      position: sticky;
+    top: 0;
+    background: white;
 display: flex;
 justify-content: space-between;
 gap:1rem;
