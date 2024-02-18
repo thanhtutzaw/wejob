@@ -8,11 +8,11 @@ const DB_NAME = "wonjobDB";
 const port = process.env.PORT || 5000;
 const job_posts = "job_posts";
 // let database;
-app.use(Express.json());
+// app.use(Express.json());
 const corsOptions = {
   origin: "https://wonjob.vercel.app",
 };
-app.use(cors(corsOptions));
+app.use(cors());
 let client
 // const dbo = require("./db/conn");
 // app.listen(port, () => {
