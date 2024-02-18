@@ -77,6 +77,7 @@ app.get("/api", (req, res) => {
     api_routes: ["/api/job_posts", "/api/job_posts2"],
   });
 });
+
 app.get(`/api/${job_posts}`, async (req, res) => {
   try {
     let collection = client.db(DB_NAME).collection(job_posts);
@@ -88,7 +89,7 @@ app.get(`/api/${job_posts}`, async (req, res) => {
 });
 app.post(`/api/${job_posts}`, async (req, res) => {
   try {
-    let collection = await database.collection(job_posts);
+    let collection = client.db(DB_NAME).collection(job_posts);
     console.log("Request Body:  " + req.body ? JSON.stringify(req.body) : req.body)
     const body = req.body
     const newData = {
@@ -104,7 +105,7 @@ app.post(`/api/${job_posts}`, async (req, res) => {
 app.delete(`/api/${job_posts}`, async (req, res) => {
   try {
     console.log("myreqId " + req.query.id);
-    let collection = await database.collection(job_posts);
+    let collection = client.db(DB_NAME).collection(job_posts);
     const query = { _id: ObjectId(req.query.id) };
     let results = await collection.deleteOne(query);
     res.send("Deleted Successfully : id - " + req.query.id).status(200);
@@ -113,13 +114,17 @@ app.delete(`/api/${job_posts}`, async (req, res) => {
   }
 });
 // app.patch(`/api/${job_posts}/add`, multer().none(), async (req, res) => {
-//   let collection = await db.collection(job_posts);
+// try {
+//   let collection = client.db(DB_NAME).collection(job_posts);
 //   const newData = {
 //     id: String(await collection.estimatedDocumentCount() + 1),
 //     title: String(req.query.title) ?? "",
 //   };
 //   let results = await collection.insertOne(newData);
 //   res.send("Edited List Successfully : " + results).status(200);
+// } catch (error) {
+//   res.status(500).send("Internal Server Error" + error);
+// }
 // });
 //
 // app.get('/api/job_posts', (req, res) => {
