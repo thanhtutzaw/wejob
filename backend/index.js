@@ -11,4 +11,9 @@ app.get('/', (req, res) => {
     message: `Hello WonJob Backend API Works ${port}`,
   });
 });
+app.get('/api/job_posts', (req, res) => {
+  res.json({
+    message: `job_posts from index Hello WonJob Backend API Works ${port}`,
+  });
+});
 module.exports = app;

@@ -14,16 +14,13 @@ router.get('/', (req, res) => {
 
 router.use('/job_posts', job_posts);
 
-module.exports = router;
-
-
-
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`Listening: http://localhost:${port}`);
 });
-app.get('/api', (req, res) => {
+app.get('/api/job_posts', (req, res) => {
   res.json({
-    message: `api index Hello WonJob Backend API Works ${port}`,
+    message: `api job_posts index Hello WonJob Backend API Works ${port}`,
   });
 });
+module.exports = router;
