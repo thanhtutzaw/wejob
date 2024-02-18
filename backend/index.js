@@ -1,18 +1,18 @@
 require("dotenv").config();
-import Express from "express";
-import MongoClient from "mongodb";
-import cors from "cors";
+const Express = require("express")
+const cors = require("cors")
+import { MongoClient } from "mongodb";
 const app = Express();
 const CONNECTION_STRING = process.env.MONGO_ATLAS_URL ?? "";
 const DB_NAME = "wonjobDB";
 const port = process.env.PORT || 5000;
 const job_posts = "job_posts";
 // let database;
-app.use(Express.json())
+app.use(Express.json());
 const corsOptions = {
-  origin: "https://wonjob.vercel.app"
-}
-app.use(cors(corsOptions))
+  origin: "https://wonjob.vercel.app",
+};
+app.use(cors(corsOptions));
 const client = new MongoClient(CONNECTION_STRING, {
   monitorCommands: true,
 });
@@ -52,6 +52,7 @@ app.get("/", (req, res) => {
     message: `Hello Won Job API listening on ${port} , ${CONNECTION_STRING} .`,
   });
 });
+
 app.get("/api", (req, res) => {
   res.json({
     api_routes: ["/api/job_posts", "/api/job_posts2"],
