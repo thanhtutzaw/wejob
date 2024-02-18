@@ -1,6 +1,7 @@
 require("dotenv").config();
 import Express from "express";
 import MongoClient from "mongodb";
+import cors from "cors";
 const app = Express();
 const CONNECTION_STRING = process.env.MONGO_ATLAS_URL ?? "";
 const DB_NAME = "wonjobDB";
