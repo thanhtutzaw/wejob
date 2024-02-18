@@ -7,16 +7,7 @@ const port = process.env.PORT || 5000;
 const job_posts = "job_posts"
 app.listen(port, () => {
   console.log(`Listening: http://localhost:${port}`);
-  app.get('/', (req, res) => {
-    res.json({
-      message: `Hello Won Job API listening on ${port} , ${CONNECTION_STRING} .`,
-    });
-  });
-  app.get('/api', (req, res) => {
-    res.json({
-      api_routes: ["/api/job_posts", "/api/job_posts2"],
-    });
-  });
+
   MongoClient.connect(CONNECTION_STRING, (error, client) => {
     if (error) {
       console.error("Error connecting to database:", error);
@@ -53,7 +44,16 @@ app.listen(port, () => {
     }
   })
 })
-
+app.get('/', (req, res) => {
+  res.json({
+    message: `Hello Won Job API listening on ${port} , ${CONNECTION_STRING} .`,
+  });
+});
+app.get('/api', (req, res) => {
+  res.json({
+    api_routes: ["/api/job_posts", "/api/job_posts2"],
+  });
+});
 // app.get('/api/job_posts', (req, res) => {
 //   res.json({
 //     message: `job_posts from index Hello WonJob Backend API Works ${port}`,
