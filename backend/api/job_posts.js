@@ -12,7 +12,7 @@ const port = process.env.PORT || 5000;
 app.listen(port, () => {
     console.log(`Listening: http://localhost:${port}`);
 });
-app.use('/', (req, res) => {
+app.get('/api/job_posts', (req, res) => {
     res.json({
         message: `job_posts Hello WonJob Backend API Works ${port}`,
     });
