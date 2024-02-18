@@ -23,13 +23,17 @@ let client
 //   console.log(`Server is running on port: ${port}`);
 // });
 // let job_posts_collection = client?.db(DB_NAME).collection(job_posts);
+client = new MongoClient(CONNECTION_STRING, {
+  monitorCommands: true,
+});
 
+await client.connect();
 app.listen(port, () => {
   console.log(`Listening: http://localhost:${port}`);
-  client.on("commandStarted", (started) => console.log(started));
-  client = new MongoClient(CONNECTION_STRING, {
-    monitorCommands: true,
-  });
+  // client.on("commandStarted", (started) => console.log(started));
+  // client = new MongoClient(CONNECTION_STRING, {
+  //   monitorCommands: true,
+  // });
   // console.error("Error connecting to database:", error);
   console.log(process.env.NODE_ENV);
   // database = client?.db(DB_NAME);
@@ -67,14 +71,13 @@ app.get("/api", (req, res) => {
   });
 });
 app.get(`/api/${job_posts}`, async (req, res) => {
-  let collection = client.db(DB_NAME).collection(job_posts);
-  res.send("jobPosts");
-  // try {
-  //   let results = await collection.find({}).limit(50).toArray();
-  //   res.send(results).status(200);
-  // } catch (error) {
-  //   res.status(500).send("Internal Server Error" + error);
-  // }
+  try {
+    let collection = client.db(DB_NAME).collection(job_posts);
+    let results = await collection.find({}).limit(50).toArray();
+    res.send(results).status(200);
+  } catch (error) {
+    res.status(500).send("Internal Server Error" + error);
+  }
 });
 // app.get('/api/job_posts', (req, res) => {
 //   res.json({
