@@ -11,7 +11,7 @@ const job_posts = "job_posts";
 // app.use(Express.json());
 const corsOptions = {
   origin: "https://wonjob.vercel.app",
-};  
+};
 app.use(cors(corsOptions));
 let client
 // const dbo = require("./db/conn");
@@ -82,7 +82,7 @@ app.get(`/api/${job_posts}`, async (req, res) => {
   try {
     let collection = client.db(DB_NAME).collection(job_posts);
     let results = await collection.find({}).limit(50).toArray();
-    res.send(results).status(200);
+    res.send(JSON.stringify(results)).status(200);
   } catch (error) {
     res.status(500).send("Internal Server Error" + error);
   }
@@ -97,7 +97,7 @@ app.post(`/api/${job_posts}`, async (req, res) => {
       ...body
     };
     let results = await collection.insertOne(newData);
-    res.send("Added List Successfully : " + results).status(200);
+    res.send("Added List Successfully : " + JSON.stringify(results)).status(200);
   } catch (error) {
     res.status(500).send("Internal Server Error" + error);
   }
