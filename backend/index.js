@@ -1,7 +1,6 @@
-import dotenv from "dotenv";
-dotenv.config();
-import Express from "express";
-import cors from "cors";
+require("dotenv").config();
+const Express = require("express");
+const cors = require("cors");
 import { MongoClient, ObjectId } from "mongodb";
 const app = Express();
 const CONNECTION_STRING = process.env.MONGO_ATLAS_URL ?? "";
