@@ -10,7 +10,7 @@ function toggleTitle() {
   title.value = toggle.value ? "wonJob" : "Let's Go"
   toggle.value = !toggle.value;
 }
-const jobLists : Ref<{title:string; _id:string}[]> = ref([])
+const jobLists : Ref<{title:string; _id:string , createdAt:Date}[]> = ref([])
 const localBackendURL = `http://localhost:5038`;
 const productionBackendURL = `https://wonjob-backend.vercel.app`;
 const Backend_URL = import.meta.env.DEV && !import.meta.env.PROD ?  localBackendURL : productionBackendURL
@@ -84,14 +84,15 @@ onUnmounted(()=>{
       <button type="button" @click="jobLists = []">Clear</button>
    </div>
    <form class="jobForm" @submit.prevent="addLists">
-    <input v-model="jobTitle" class="jobTitleInput" type="search" name="jobTitle" placeholder="Add Job Title" />
+    <input v-model="jobTitle" required class="jobTitleInput" type="search" name="jobTitle" placeholder="Add Job Title" />
      <button class="submit" type="submit">Add New</button>
    </form>
    <p v-if="job_posts_loading">Loading...</p>
    <p v-if="job_posts_error" style="color:red"> {{job_posts_error}}</p>
     <ol class="job_lists" v-if="jobLists.length && !job_posts_loading">
       <li class="card_Item" v-bind:key="i._id" v-for="i of jobLists">
-      {{i.title}}
+      {{i.title }} 
+      <p class="date">{{ i?.createdAt ? new Date(i.createdAt).toLocaleDateString() : "" }}</p>
     <button class="danger" @click="deleteLists(i._id)">Delete</button>
     </li>
     </ol>
@@ -108,6 +109,9 @@ onUnmounted(()=>{
   display: flex;
   align-items: center;
   justify-content: space-between;
+  .date{
+    color:gray;
+  }
 }}
 form.jobForm{
       position: sticky;

@@ -1,6 +1,7 @@
-require("dotenv").config();
-const Express = require("express");
-const cors = require("cors");
+import dotenv from "dotenv";
+dotenv.config();
+import Express from "express";
+import cors from "cors";
 import { MongoClient, ObjectId } from "mongodb";
 const app = Express();
 const CONNECTION_STRING = process.env.MONGO_ATLAS_URL ?? "";
@@ -8,12 +9,12 @@ const DB_NAME = "wonjobDB";
 const port = process.env.PORT || 5000;
 const job_posts = "job_posts";
 // let database;
-// app.use(Express.json());
+app.use(Express.json());
 const corsOptions = {
-  origin: "https://wonjob.vercel.app",
+  origin: ["https://wonjob.vercel.app", "http://localhost:5173"],
 };
 app.use(cors(corsOptions));
-let client
+let client;
 // const dbo = require("./db/conn");
 // app.listen(port, () => {
 //   // perform a database connection when server starts
@@ -81,7 +82,7 @@ app.get("/api", (req, res) => {
 app.get(`/api/${job_posts}`, async (req, res) => {
   try {
     let collection = client.db(DB_NAME).collection(job_posts);
-    let results = await collection.find({}).limit(50).toArray();
+    let results = await collection.find({}).limit(50).sort({ createdAt: -1 }).toArray();
     res.send(JSON.stringify(results)).status(200);
   } catch (error) {
     res.status(500).send("Internal Server Error" + error);
@@ -90,14 +91,18 @@ app.get(`/api/${job_posts}`, async (req, res) => {
 app.post(`/api/${job_posts}`, async (req, res) => {
   try {
     let collection = client.db(DB_NAME).collection(job_posts);
-    console.log("Request Body:  " + req.body ? JSON.stringify(req.body) : req.body)
-    const body = req.body
+    console.log(
+      "Request Body:  " + req.body ? JSON.stringify(req.body) : req.body
+    );
+    const body = req.body;
     const newData = {
       title: String(req.query.title) ?? "",
-      ...body
+      ...body,
     };
     let results = await collection.insertOne(newData);
-    res.send("Added List Successfully : " + JSON.stringify(results)).status(200);
+    res
+      .send("Added List Successfully : " + JSON.stringify(results))
+      .status(200);
   } catch (error) {
     res.status(500).send("Internal Server Error" + error);
   }
