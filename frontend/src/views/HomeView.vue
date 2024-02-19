@@ -4,6 +4,8 @@ import { onMounted, onUnmounted, ref , type Ref } from 'vue';
 const title = ref("wonJob")
 const job_posts_error : Ref<unknown> = ref(null)
 const toggle = ref(false)
+const add_job_posts_loading  = ref(false);
+
 const job_posts_loading  = ref(false)
 const jobTitle = ref("")
 function toggleTitle() {
@@ -51,14 +53,17 @@ async function addLists(e: Event) {
     createdAt: Date.now()
   }
   try {
+    add_job_posts_loading.value = true;
     await fetch(`${Backend_URL}/api/job_posts?title=${jobTitle.value}`, {method:"POST", body:JSON.stringify(newData) , headers: {
-        "Content-Type": "application/json",
-
-      },
-    } )
-    getJobLists();
-    jobTitle.value = ''
-  } catch (error) {
+      "Content-Type": "application/json",
+      
+    },
+  } )
+  getJobLists();
+  add_job_posts_loading.value = false;
+  jobTitle.value = ''
+} catch (error) {
+    add_job_posts_loading.value = false;
     throw new Error(`${error}`);
   }
   
@@ -85,7 +90,9 @@ onUnmounted(()=>{
    </div>
    <form class="jobForm" @submit.prevent="addLists">
     <input v-model="jobTitle" required class="jobTitleInput" type="search" name="jobTitle" placeholder="Add Job Title" />
-     <button class="submit" type="submit">Add New</button>
+     <button :disabled="add_job_posts_loading" class="submit" type="submit">
+    {{ add_job_posts_loading ? "Adding" : "Add New" }}
+    </button>
    </form>
    <p v-if="job_posts_loading">Loading...</p>
    <p v-if="job_posts_error" style="color:red"> {{job_posts_error}}</p>

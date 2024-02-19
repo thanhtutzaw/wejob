@@ -1,7 +1,7 @@
 require("dotenv").config();
 const Express = require("express");
 const cors = require("cors");
-import { MongoClient, ObjectId } from "mongodb";
+const { MongoClient, ObjectId } = require("mongodb");
 const app = Express();
 const CONNECTION_STRING = process.env.MONGO_ATLAS_URL ?? "";
 const DB_NAME = "wonjobDB";
@@ -44,6 +44,14 @@ app.listen(port, () => {
     "\x1b[0m" +
     " Local:   http://localhost:5038"
   );
+  console.log(
+    "DB Success  " +
+    "\x1b[0m" +
+    "\x1b[46m" +
+    "➜ " +
+    "\x1b[0m" +
+    " job_posts:   http://localhost:5038/api/job_posts"
+  );
   // app.get(`/api/${job_posts}`, async (req, res) => {
   //   try {
   //     let collection = client.db(DB_NAME).collection(job_posts);
@@ -69,7 +77,7 @@ app.listen(port, () => {
 });
 app.get("/", (req, res) => {
   res.json({
-    message: `Hello Won Job API listening on ${port} , ${CONNECTION_STRING} .`,
+    message: `Hello Won Job API listening on ${port} .`,
   });
 });
 app.get("/api", (req, res) => {
@@ -136,4 +144,4 @@ app.delete(`/api/${job_posts}`, async (req, res) => {
 //     message: `job_posts from index Hello WonJob Backend API Works ${port}`,
 //   });
 // });
-export default app;
+// export default app;
