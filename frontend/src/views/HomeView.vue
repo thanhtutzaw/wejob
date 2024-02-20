@@ -107,9 +107,11 @@ onUnmounted(()=>{
 </template>
 
 <style>
+@media (min-width: 1024px) {
 main{
       position: relative;
     top: 35vh;
+}
 }
 .job_lists{
   button{
