@@ -4,6 +4,10 @@
   --primary-color: rgb(0 140 141);
 }
 
+html {
+  scrollbar-gutter: stable;
+}
+
 button {
   min-width : 75px;
   cursor    : pointer;
