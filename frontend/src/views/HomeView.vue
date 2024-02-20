@@ -134,6 +134,7 @@ input{
   flex:1;
 }
 .submit{
+min-width: 90px;
   min-height: 45px;
   font-weight: 600;
   color: var(--primary-color);
