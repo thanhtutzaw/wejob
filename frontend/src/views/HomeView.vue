@@ -79,9 +79,11 @@ onUnmounted(()=>{
 
 <template>
   <main>
-   <h1> {{ title }}</h1>
-   <h3>Let's finish your Job search journey together 🙉 🚀</h3>
-   <button @click="toggleTitle" type="button">Get Started</button>
+   <div>
+     <h1> {{ title }}</h1>
+     <h3>Let's finish your Job search journey together 🙉 🚀</h3>
+     <button @click="toggleTitle" type="button">Get Started</button>
+   </div>
     <!-- <TheWelcome /> -->
    <div class="listsContainer">
      <!-- <button type="button" @click="jobLists.push(jobLists.length + 1)">Add Job Lists</button> -->
@@ -94,7 +96,7 @@ onUnmounted(()=>{
     {{ add_job_posts_loading ? "Adding" : "Add New" }}
     </button>
    </form>
-   <p v-if="job_posts_loading">Loading...</p>
+   <p class="loading" v-if="job_posts_loading">Loading...</p>
    <p v-if="job_posts_error" style="color:red"> {{job_posts_error}}</p>
     <ol class="job_lists" v-if="jobLists.length && !job_posts_loading">
       <li class="card_Item" v-bind:key="i._id" v-for="i of jobLists">
@@ -109,8 +111,9 @@ onUnmounted(()=>{
 <style>
 @media (min-width: 1024px) {
 main{
-      position: relative;
-    top: 35vh;
+      /* position: relative;
+    top: 35vh; */
+        padding-top: 35vh;
 }
 }
 .job_lists{
