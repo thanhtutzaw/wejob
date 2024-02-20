@@ -16,6 +16,11 @@ button {
   &:active {
     opacity: .7;
   }
+
+  &:disabled {
+    opacity: .5;
+    cursor : not-allowed;
+  }
 }
 
 #app {
