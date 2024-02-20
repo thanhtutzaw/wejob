@@ -9,14 +9,6 @@
 </template>
 
 <style>
-@media (min-width: 1024px) {
-main{
-  min-height: 100vh;
-      /* position: relative;
-    top: 35vh; */
-        padding-top: 35vh;
-}
-}
 .notFound{
   text-align: center;
     margin-block: 1rem;
