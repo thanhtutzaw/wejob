@@ -150,7 +150,6 @@ onUnmounted(()=>{
     -webkit-line-clamp: 1;
     overflow: hidden;
     text-overflow: ellipsis;
-    -webkit-box-orient: vertical;
   }
   .description{
     flex: 1;
