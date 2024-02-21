@@ -5,8 +5,15 @@ const title = ref("wonJob")
 const job_posts_error : Ref<unknown> = ref(null)
 const toggle = ref(false)
 const add_job_posts_loading  = ref(false);
-
+const editModalRef = ref(null)
 const job_posts_loading  = ref(false)
+const editModalForm : Ref<{
+  title: string, description: string; _id:string;
+} > = ref({
+  _id:'',
+  title:'',
+  description:'',
+})
 const jobTitle = ref("")
 function toggleTitle() {
   title.value = toggle.value ? "wonJob" : "Let's Go"
@@ -16,6 +23,7 @@ const jobLists : Ref<{title:string; _id:string , createdAt:Date}[]> = ref([])
 const localBackendURL = `http://localhost:5038`;
 const productionBackendURL = `https://wonjob-backend.vercel.app`;
 const Backend_URL = import.meta.env.DEV && !import.meta.env.PROD ?  localBackendURL : productionBackendURL
+
  function getJobLists() {
   console.log("DEV - "+import.meta.env.DEV);
   console.log("PROD - "+import.meta.env.PROD);
@@ -39,6 +47,35 @@ const Backend_URL = import.meta.env.DEV && !import.meta.env.PROD ?  localBackend
   }
   getNew()
   // jobLists.value = newLists ?? {};
+}
+function closeModal() {
+ if(editModalRef.value){
+const modal : HTMLDialogElement = editModalRef.value
+modal?.close()
+}
+}
+async function editLists(_id:string | number , newData:any) {
+  // editModalToggle.value = !editModalToggle.value;
+  if(editModalRef.value){
+    
+    const modal : HTMLDialogElement = editModalRef.value
+    modal.showModal();
+  }
+  console.log(newData);
+  editModalForm.value = newData
+  // jobLists.value = jobLists.value.filter(j => j._id !== _id)
+  // await fetch(`${Backend_URL}/api/job_posts?id=`+_id, {method:"PATCH" , body:JSON.stringify(newData)})
+  // getJobLists();
+
+}
+async function updateLists( newData:any) {
+  if(!newData._id) return;
+const {_id } = newData
+const updateData = {...newData , updateAt:Date.now()}
+  await fetch(`${Backend_URL}/api/job_posts?id=`+ _id, {method:"PUT" , body:JSON.stringify(updateData),headers: {
+    "Content-Type": "application/json",
+  }})
+  getJobLists();
 }
 async function deleteLists(_id:string | number) {
   jobLists.value = jobLists.value.filter(j => j._id !== _id)
@@ -73,7 +110,6 @@ onMounted(() => {
 })
 onUnmounted(()=>{
   getJobLists();
-
 })
 </script>
 
@@ -104,14 +140,72 @@ onUnmounted(()=>{
         <p class="description">{{ "Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf." }}</p>
         <p class="date">{{ i?.createdAt ? new Date(i.createdAt).toLocaleDateString() : "" }}</p>
       </div>
+    <button class="submit" @click="editLists(i._id , i)">Edit</button>
     <button class="danger" @click="deleteLists(i._id)">Delete</button>
     </li>
     </ol>
+    <dialog ref="editModalRef">
+      <header>
+        <h1>Edit Form</h1>
+        <button type="button" @click="closeModal">x</button>
+      </header>
+      <form class="jobForm" @submit.prevent="updateLists( editModalForm)">
+        <label for="jobTitle">Title
+        <input v-model="editModalForm.title" class="jobTitleInput" name="jobTitle" id="jobTitle" placeholder="Add Job Title"  />
+        </label>
+        <label for="jobDescription">Description
+        <textarea v-model="editModalForm.description" class="jobTitleInput" id="jobDescription" name="jobDescription" placeholder="Add Job Description"   ></textarea>
+        </label>
+       <button :disabled="false" class="submit" type="submit">
+      {{ false ? "Updating" : "Update" }}
+      </button>
+     </form>
+
+    </dialog>
   </main>
 </template>
 
 <style>
-
+dialog{
+  min-width: 50vw;
+/* max-width: 55vw; */
+  margin:auto;
+  border: 1px solid rgba(128, 128, 128, 0.404);
+box-shadow:0 0px 20px 0px #00000038;
+  border-radius: 1rem;
+  form.jobForm{
+    label{
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    textarea{
+      min-width: 100%;
+    }
+    flex-direction: column;
+    textarea , input{
+      font-size: 1.3rem;
+    }
+    input{
+      border-radius: 10px !important;
+    }
+  }
+  form{
+    
+    label{
+      font-weight: bold;
+      color: gray;
+    }
+  }
+  > form > * {
+        width: 100%;
+  }
+}
+dialog header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .job_lists{
   display: flex;
   flex-direction: column;

@@ -114,6 +114,23 @@ app.post(`/api/${job_posts}`, async (req, res) => {
     res.status(500).send("Internal Server Error" + error);
   }
 });
+app.put(`/api/${job_posts}`, async (req, res) => {
+  try {
+    let collection = client.db(DB_NAME).collection(job_posts);
+    console.log(
+      "Request Body:  " + req.body ? JSON.stringify(req.body) : req.body
+    );
+    const query = { _id: ObjectId(req.query.id) };
+    const body = req.body;
+
+    let results = await collection.updateOne(query, { $set: { title: body.title, description: body.description } }, { upsert: true });
+    res
+      .send("Updated List Successfully : " + JSON.stringify(results))
+      .status(200);
+  } catch (error) {
+    res.status(500).send("Internal Server Error" + error);
+  }
+});
 app.delete(`/api/${job_posts}`, async (req, res) => {
   try {
     console.log("myreqId " + req.query.id);
