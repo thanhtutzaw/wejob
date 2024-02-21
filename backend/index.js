@@ -125,7 +125,7 @@ app.put(`/api/${job_posts}`, async (req, res) => {
 
     let results = await collection.updateOne(query, { $set: { title: body.title, description: body.description } }, { upsert: true });
     res
-      .send("Updated List Successfully : " + JSON.stringify(results))
+      .send("Updated List Successfully : " + JSON.stringify(results) + JSON.stringify(body))
       .status(200);
   } catch (error) {
     res.status(500).send("Internal Server Error" + error);

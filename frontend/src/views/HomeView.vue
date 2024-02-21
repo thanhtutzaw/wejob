@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref , type Ref } from 'vue';
+import {type JobPost} from 'src/types'
 // import TheWelcome from '../components/TheWelcome.vue'
 const title = ref("wonJob")
 const job_posts_error : Ref<unknown> = ref(null)
@@ -7,19 +8,19 @@ const toggle = ref(false)
 const add_job_posts_loading  = ref(false);
 const editModalRef = ref(null)
 const job_posts_loading  = ref(false)
-const editModalForm : Ref<{
-  title: string, description: string; _id:string;
-} > = ref({
+const editModalForm : Ref<JobPost> = ref({
   _id:'',
   title:'',
   description:'',
+  createdAt:null,
+  updatedAt:null,
 })
 const jobTitle = ref("")
 function toggleTitle() {
   title.value = toggle.value ? "wonJob" : "Let's Go"
   toggle.value = !toggle.value;
 }
-const jobLists : Ref<{title:string; _id:string , createdAt:Date}[]> = ref([])
+const jobLists : Ref<JobPost[]> = ref([])
 const localBackendURL = `http://localhost:5038`;
 const productionBackendURL = `https://wonjob-backend.vercel.app`;
 const Backend_URL = import.meta.env.DEV && !import.meta.env.PROD ?  localBackendURL : productionBackendURL
@@ -54,7 +55,7 @@ const modal : HTMLDialogElement = editModalRef.value
 modal?.close()
 }
 }
-async function editLists(_id:string | number , newData:any) {
+async function editLists(_id:JobPost["_id"] , newData:JobPost) {
   // editModalToggle.value = !editModalToggle.value;
   if(editModalRef.value){
     
@@ -65,19 +66,17 @@ async function editLists(_id:string | number , newData:any) {
   editModalForm.value = newData
   // jobLists.value = jobLists.value.filter(j => j._id !== _id)
   // await fetch(`${Backend_URL}/api/job_posts?id=`+_id, {method:"PATCH" , body:JSON.stringify(newData)})
-  // getJobLists();
-
 }
-async function updateLists( newData:any) {
+async function updateLists( newData:JobPost) {
   if(!newData._id) return;
 const {_id } = newData
-const updateData = {...newData , updateAt:Date.now()}
+const updateData = {...newData , updatedAt:Date.now()}
   await fetch(`${Backend_URL}/api/job_posts?id=`+ _id, {method:"PUT" , body:JSON.stringify(updateData),headers: {
     "Content-Type": "application/json",
   }})
   getJobLists();
 }
-async function deleteLists(_id:string | number) {
+async function deleteLists(_id:JobPost["_id"]) {
   jobLists.value = jobLists.value.filter(j => j._id !== _id)
   await fetch(`${Backend_URL}/api/job_posts?id=`+_id, {method:"DELETE"})
 }
@@ -137,7 +136,7 @@ onUnmounted(()=>{
       <li class="card_Item" v-bind:key="i._id" v-for="i of jobLists">      
       <div class="left">
         <p class="title">{{ i.title }}</p>
-        <p class="description">{{ "Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf." }}</p>
+        <p class="description">{{i.description ?? "Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf." }}</p>
         <p class="date">{{ i?.createdAt ? new Date(i.createdAt).toLocaleDateString() : "" }}</p>
       </div>
     <button class="submit" @click="editLists(i._id , i)">Edit</button>
