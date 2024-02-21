@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref , type Ref } from 'vue';
-import {type JobPost} from 'src/types'
 // import TheWelcome from '../components/TheWelcome.vue'
+interface JobPost {
+  title: string;
+  _id: string;
+  createdAt: Date | null;
+  updatedAt: Date | null;
+  description: string;
+}
 const title = ref("wonJob")
 const job_posts_error : Ref<unknown> = ref(null)
 const toggle = ref(false)
@@ -55,7 +61,7 @@ const modal : HTMLDialogElement = editModalRef.value
 modal?.close()
 }
 }
-async function editLists(_id:JobPost["_id"] , newData:JobPost) {
+async function editLists(_id:string | number , newData:JobPost) {
   // editModalToggle.value = !editModalToggle.value;
   if(editModalRef.value){
     
@@ -76,7 +82,7 @@ const updateData = {...newData , updatedAt:Date.now()}
   }})
   getJobLists();
 }
-async function deleteLists(_id:JobPost["_id"]) {
+async function deleteLists(_id: string | number) {
   jobLists.value = jobLists.value.filter(j => j._id !== _id)
   await fetch(`${Backend_URL}/api/job_posts?id=`+_id, {method:"DELETE"})
 }
