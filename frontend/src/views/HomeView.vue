@@ -80,13 +80,12 @@ onUnmounted(()=>{
 <template>
   <main class="welcome">
    <div>
-     <h1> {{ title }}</h1>
+     <h1>{{ title }}</h1>
      <h3>Let's finish your Job search journey together 🙉 🚀</h3>
      <button @click="toggleTitle" type="button">Get Started</button>
    </div>
     <!-- <TheWelcome /> -->
    <div class="listsContainer">
-     <!-- <button type="button" @click="jobLists.push(jobLists.length + 1)">Add Job Lists</button> -->
       <button type="button" @click="jobLists.reverse()">Reverse</button>
       <button type="button" @click="jobLists = []">Clear</button>
    </div>
@@ -99,9 +98,12 @@ onUnmounted(()=>{
    <p class="loading" v-if="job_posts_loading">Loading...</p>
    <p v-if="job_posts_error" style="color:red"> {{job_posts_error}}</p>
     <ol class="job_lists" v-if="jobLists.length && !job_posts_loading">
-      <li class="card_Item" v-bind:key="i._id" v-for="i of jobLists">
-      {{i.title }} 
-      <p class="date">{{ i?.createdAt ? new Date(i.createdAt).toLocaleDateString() : "" }}</p>
+      <li class="card_Item" v-bind:key="i._id" v-for="i of jobLists">      
+      <div class="left">
+        <p class="title">{{ i.title }}</p>
+        <p class="description">{{ "Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf." }}</p>
+        <p class="date">{{ i?.createdAt ? new Date(i.createdAt).toLocaleDateString() : "" }}</p>
+      </div>
     <button class="danger" @click="deleteLists(i._id)">Delete</button>
     </li>
     </ol>
@@ -109,6 +111,61 @@ onUnmounted(()=>{
 </template>
 
 <style>
+
+.job_lists{
+  display: flex;
+  flex-direction: column;
+  gap:.8rem;
+  margin-bottom: 2rem;
+  button{
+    min-width: 90px;
+  }
+  padding: 0;
+  .card_Item{
+       
+    gap:1rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  .left{
+    display: flex;
+    justify-content: space-between;
+    flex:1;
+    flex-direction: column;
+
+    /* max-width: 71vw; */
+    /* max-width: 35vw; */
+    white-space: nowrap;
+    -webkit-line-clamp: 3;
+    line-clamp: 3; 
+     overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
+  }
+  .title{
+    font-weight: bold;
+    /* max-width: 50%; */
+    flex:1;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
+  }
+  .description{
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    white-space: break-spaces;
+  }
+  .date{
+    color:gray;
+  }
+}}
 @media (min-width: 1024px) {
 .welcome{
   min-height: 100vh;
@@ -116,25 +173,17 @@ onUnmounted(()=>{
     top: 35vh; */
         padding-top: 35vh;
 }
-}
 .job_lists{
-  button{
-    min-width: 90px;
-  }
-  padding: 0;
-  .card_Item{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  .date{
-    color:gray;
-  }
+.card_Item{
+  max-width: 385px;
 }}
+}
 form.jobForm{
       position: sticky;
     top: 0;
     background: white;
 display: flex;
+flex-wrap: wrap;
 justify-content: space-between;
 gap:1rem;
 align-items: center;
