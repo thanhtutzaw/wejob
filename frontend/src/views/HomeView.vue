@@ -78,7 +78,7 @@ onUnmounted(()=>{
 </script>
 
 <template>
-  <main>
+  <main class="welcome">
    <div>
      <h1> {{ title }}</h1>
      <h3>Let's finish your Job search journey together 🙉 🚀</h3>
@@ -110,7 +110,7 @@ onUnmounted(()=>{
 
 <style>
 @media (min-width: 1024px) {
-main{
+.welcome{
   min-height: 100vh;
       /* position: relative;
     top: 35vh; */

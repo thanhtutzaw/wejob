@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import NotFoundPageVue from '@/views/NotFoundPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -10,10 +9,14 @@ const router = createRouter({
       name: 'home',
       component: HomeView
     },
-  // will match everything and put it under `$route.params.pathMatch`
-  { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFoundPageVue },
-  // will match anything starting with `/user-` and put it under `$route.params.afterUser`
-  // { path: '/user-:afterUser(.*)', component:  },
+    // will match everything and put it under `$route.params.pathMatch`
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'NotFound',
+      component: () => import('../views/NotFoundPage.vue')
+    },
+    // will match anything starting with `/user-` and put it under `$route.params.afterUser`
+    // { path: '/user-:afterUser(.*)', component:  },
     {
       path: '/about',
       name: 'about',
