@@ -1,13 +1,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref , type Ref } from 'vue';
+import type {JobPost} from 'src/types'
 // import TheWelcome from '../components/TheWelcome.vue'
-interface JobPost {
-  title: string;
-  _id: string;
-  createdAt: Date | null;
-  updatedAt: Date | null;
-  description: string;
-}
 const title = ref("wonJob")
 const job_posts_error : Ref<unknown> = ref(null)
 const toggle = ref(false)
@@ -61,7 +55,7 @@ const modal : HTMLDialogElement = editModalRef.value
 modal?.close()
 }
 }
-async function editLists(_id:string | number , newData:JobPost) {
+async function editLists(_id:JobPost["_id"] , newData:JobPost) {
   // editModalToggle.value = !editModalToggle.value;
   if(editModalRef.value){
     
@@ -82,7 +76,7 @@ const updateData = {...newData , updatedAt:Date.now()}
   }})
   getJobLists();
 }
-async function deleteLists(_id: string | number) {
+async function deleteLists(_id: JobPost["_id"]) {
   jobLists.value = jobLists.value.filter(j => j._id !== _id)
   await fetch(`${Backend_URL}/api/job_posts?id=`+_id, {method:"DELETE"})
 }
@@ -151,14 +145,14 @@ onUnmounted(()=>{
     </ol>
     <dialog ref="editModalRef">
       <header>
-        <h1>Edit Form</h1>
+        <h1>Update Job Post</h1>
         <button type="button" @click="closeModal">x</button>
       </header>
       <form class="jobForm" @submit.prevent="updateLists( editModalForm)">
         <label for="jobTitle">Title
-        <input v-model="editModalForm.title" class="jobTitleInput" name="jobTitle" id="jobTitle" placeholder="Add Job Title"  />
+        <input required v-model="editModalForm.title" class="jobTitleInput" name="jobTitle" id="jobTitle" placeholder="Add Job Title"  />
         </label>
-        <label for="jobDescription">Description
+        <label required for="jobDescription">Description
         <textarea v-model="editModalForm.description" class="jobTitleInput" id="jobDescription" name="jobDescription" placeholder="Add Job Description"   ></textarea>
         </label>
        <button :disabled="false" class="submit" type="submit">
@@ -327,3 +321,4 @@ button{
   border-radius: 10px;
 }
 </style>
+../types.js
