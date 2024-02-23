@@ -1,21 +1,24 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref , type Ref } from 'vue';
 import type {JobPost} from 'src/types'
+import EditJobPostForm from './EditJobPostForm.vue'
+import AddJobPostForm from './AddJobPostForm.vue';
 // import TheWelcome from '../components/TheWelcome.vue'
 const title = ref("wonJob")
 const job_posts_error : Ref<unknown> = ref(null)
 const toggle = ref(false)
 const add_job_posts_loading  = ref(false);
-const editModalRef = ref(null)
+const editModalRef = ref<HTMLDialogElement | null>(null)
+const addModalRef = ref<HTMLDialogElement | null>(null)
 const job_posts_loading  = ref(false)
-const editModalForm : Ref<JobPost> = ref({
-  _id:'',
-  title:'',
-  description:'',
-  createdAt:null,
-  updatedAt:null,
-})
-const jobTitle = ref("")
+const editModalForm : Ref<JobPost | null> = ref(null)
+//   {
+//   _id: '',
+//     title: '',
+//       description: '',
+//         createdAt: null,
+//           updatedAt: null,
+// }
 function toggleTitle() {
   title.value = toggle.value ? "wonJob" : "Let's Go"
   toggle.value = !toggle.value;
@@ -49,17 +52,25 @@ const Backend_URL = import.meta.env.DEV && !import.meta.env.PROD ?  localBackend
   getNew()
   // jobLists.value = newLists ?? {};
 }
-function closeModal() {
+function closeAddModal() {
+ if(addModalRef.value){
+const modal  = addModalRef.value
+modal.close()
+}
+resetForm()
+}
+function closeEditModal() {
  if(editModalRef.value){
-const modal : HTMLDialogElement = editModalRef.value
-modal?.close()
+const modal  = editModalRef.value
+modal.close()
 }
+resetForm()
 }
-async function editLists(_id:JobPost["_id"] , newData:JobPost) {
+async function openEditModal(_id:JobPost["_id"] , newData:JobPost) {
   // editModalToggle.value = !editModalToggle.value;
   if(editModalRef.value){
     
-    const modal : HTMLDialogElement = editModalRef.value
+    const modal = editModalRef.value
     modal.showModal();
   }
   console.log(newData);
@@ -67,37 +78,59 @@ async function editLists(_id:JobPost["_id"] , newData:JobPost) {
   // jobLists.value = jobLists.value.filter(j => j._id !== _id)
   // await fetch(`${Backend_URL}/api/job_posts?id=`+_id, {method:"PATCH" , body:JSON.stringify(newData)})
 }
-async function updateLists( newData:JobPost) {
-  if(!newData._id) return;
-const {_id } = newData
-const updateData = {...newData , updatedAt:Date.now()}
-  await fetch(`${Backend_URL}/api/job_posts?id=`+ _id, {method:"PUT" , body:JSON.stringify(updateData),headers: {
-    "Content-Type": "application/json",
-  }})
+async function openAddModal() {
+  // editModalToggle.value = !editModalToggle.value;
+  if(addModalRef.value){
+    
+    const modal = addModalRef.value
+    modal.showModal();
+  }
+  // jobLists.value = jobLists.value.filter(j => j._id !== _id)
+  // await fetch(`${Backend_URL}/api/job_posts?id=`+_id, {method:"PATCH" , body:JSON.stringify(newData)})
+}
+async function editForm() {
+  if(!editModalForm.value ) return;
+  const newData = editModalForm.value;
+  const postId = newData._id
+const updateData = {...newData ,updatedAt:Date.now()}
+  try {
+    await fetch(`${Backend_URL}/api/job_posts?id=`+postId, {method:"PUT" , body:JSON.stringify(updateData),headers: {
+      "Content-Type": "application/json",
+    }})
+    editModalRef.value?.close()
+  } catch (error) {
+    console.log(error);
+  }
   getJobLists();
 }
 async function deleteLists(_id: JobPost["_id"]) {
-  jobLists.value = jobLists.value.filter(j => j._id !== _id)
-  await fetch(`${Backend_URL}/api/job_posts?id=`+_id, {method:"DELETE"})
+  try {
+    await fetch(`${Backend_URL}/api/job_posts?id=`+_id, {method:"DELETE"})
+    jobLists.value = jobLists.value.filter(j => j._id !== _id)
+  } catch (error) {
+    console.log(error);
+  }
 }
-async function addLists(e: Event) {
+function resetForm() {
+  editModalForm.value = null
+}
+async function addLists() {
+  if(!editModalForm.value) return;
   // const formData = new FormData();
-  // console.log(formData);
-  console.log(e);
-  console.log(jobTitle);
+  const {_id , ...data} = editModalForm.value
   const newData = {
+    ...editModalForm.value ? (data ): {},
     createdAt: Date.now()
   }
+  console.log("add : " + JSON.stringify(newData));
   try {
-    add_job_posts_loading.value = true;
-    await fetch(`${Backend_URL}/api/job_posts?title=${jobTitle.value}`, {method:"POST", body:JSON.stringify(newData) , headers: {
-      "Content-Type": "application/json",
-      
+    await fetch(`${Backend_URL}/api/job_posts?title=${editModalForm.value?.title}`, {method:"POST", body:JSON.stringify(newData) , headers: {
+      "Content-Type": "application/json",      
     },
   } )
   getJobLists();
-  add_job_posts_loading.value = false;
-  jobTitle.value = ''
+  resetForm();
+  closeAddModal();
 } catch (error) {
     add_job_posts_loading.value = false;
     throw new Error(`${error}`);
@@ -125,41 +158,33 @@ onUnmounted(()=>{
       <button type="button" @click="jobLists = []">Clear</button>
    </div>
    <form class="jobForm" @submit.prevent="addLists">
-    <input v-model="jobTitle" required class="jobTitleInput" type="search" name="jobTitle" placeholder="Add Job Title" />
-     <button :disabled="add_job_posts_loading" class="submit" type="submit">
-    {{ add_job_posts_loading ? "Adding" : "Add New" }}
+    <input style="cursor: pointer;" @click="openAddModal" readonly class="jobTitleInput" type="search" name="jobTitle" placeholder="Add Job Title" />
+     <button :disabled="false" class="submit" type="button" @click="openAddModal">
+    {{ false ? "Adding" : "Add New" }}
     </button>
    </form>
    <p class="loading" v-if="job_posts_loading">Loading...</p>
    <p v-if="job_posts_error" style="color:red"> {{job_posts_error}}</p>
     <ol class="job_lists" v-if="jobLists.length && !job_posts_loading">
-      <li class="card_Item" v-bind:key="i._id" v-for="i of jobLists">      
-      <div class="left">
-        <p class="title">{{ i.title }}</p>
-        <p class="description">{{i.description ?? "Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf." }}</p>
-        <p class="date">{{ i?.createdAt ? new Date(i.createdAt).toLocaleDateString() : "" }}</p>
+      <li  class="card_Item" v-bind:key="post._id" v-for="post of jobLists" >      
+      <div v-if="post" class="left">
+        <p v-if="post.title" class="title">{{ post.title }}</p>
+        <p v-if="post.description" class="description">{{post.description ?? "Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf." }}</p>
+        <p v-if="post.createdAt" class="date">{{ post?.createdAt ? new Date(post.createdAt).toLocaleDateString() : "" }}</p>
       </div>
-    <button class="submit" @click="editLists(i._id , i)">Edit</button>
-    <button class="danger" @click="deleteLists(i._id)">Delete</button>
+    <button class="submit" @click="openEditModal(post._id , post)">Edit</button>
+    <button class="danger" @click="deleteLists(post._id)">Delete</button>
     </li>
     </ol>
-    <dialog ref="editModalRef">
-      <header>
-        <h1>Update Job Post</h1>
-        <button type="button" @click="closeModal">x</button>
-      </header>
-      <form class="jobForm" @submit.prevent="updateLists( editModalForm)">
-        <label for="jobTitle">Title
-        <input required v-model="editModalForm.title" class="jobTitleInput" name="jobTitle" id="jobTitle" placeholder="Add Job Title"  />
-        </label>
-        <label required for="jobDescription">Description
-        <textarea v-model="editModalForm.description" class="jobTitleInput" id="jobDescription" name="jobDescription" placeholder="Add Job Description"   ></textarea>
-        </label>
-       <button :disabled="false" class="submit" type="submit">
-      {{ false ? "Updating" : "Update" }}
-      </button>
-     </form>
-
+    <dialog  @close="resetForm" ref="addModalRef">
+      <AddJobPostForm  :resetForm="resetForm" :closeModal="closeAddModal" :submitAddForm="addLists" 
+      :editModalForm="editModalForm" @update:modelValue="editModalForm = $event" 
+        />
+    </dialog>
+    <dialog  @close="resetForm" ref="editModalRef">
+    <EditJobPostForm  :resetForm="resetForm" v-if="editModalForm" :closeModal="closeEditModal" :submitEditForm="editForm" 
+    :editModalForm="editModalForm" @update:modelValue="editModalForm = $event" 
+      />
     </dialog>
   </main>
 </template>

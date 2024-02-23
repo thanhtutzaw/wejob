@@ -8,9 +8,9 @@
     "start-server": "cd backend && set NODE_ENV=production&& node index.js",
     "start-dev-server": "cd backend && set NODE_ENV=development&& node index.js",
     "install-client": "cd frontend && npm install",
-    "build-client": "cd frontend && npm run build",
     "dev-client": "cd frontend && npm run dev",
-    "start-client": "cd frontend && npm run start"
+    "build-client": "cd frontend && npm run build",
+    "start-client": "cd frontend && npm run preview"
   },
   "keywords": [],
   "author": "",

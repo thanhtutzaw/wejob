@@ -10,7 +10,7 @@ const job_posts = "job_posts";
 // let database;
 app.use(Express.json());
 const corsOptions = {
-  origin: ["https://wonjob.vercel.app", "http://localhost:5173"],
+  origin: ["https://wonjob.vercel.app", "http://localhost:5173", "http://localhost:4173"],
 };
 app.use(cors(corsOptions));
 let client;
