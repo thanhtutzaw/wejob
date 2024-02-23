@@ -1,7 +1,9 @@
 # wonjob - Job Search Platform
 > Frontend - [https://wonjob.vercel.app](https://wonjob.vercel.app)
-<br> Backend - [https://wonjob-backend.vercel.app/api/job_posts](https://wonjob-backend.vercel.app/api/job_posts)   
-    <img src="https://skillicons.dev/icons?i=vue,mongo,nodejs,express" />
+<br> Backend - [https://wonjob-backend.vercel.app/api/job_posts](https://wonjob-backend.vercel.app/api/job_posts)
+
+<p text-align="center"><img src="https://skillicons.dev/icons?i=vue,mongo,nodejs,express" /></p>
+    
 
 ## Setup
 
