@@ -213,7 +213,7 @@ box-shadow:0 0px 20px 0px #00000038;
       font-size: 1.3rem;
       color:#5e5e5e !important;
       &:focus{
-        color:black;
+        color:black !important;
       }
     }
     

@@ -96,6 +96,9 @@ dialog {
 		textarea,
 		input {
 			font-size: 1.3rem !important;
+			 &:focus{
+        color:black !important;
+      }
 		}
 
 		input {
