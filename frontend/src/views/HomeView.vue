@@ -166,7 +166,7 @@ onUnmounted(()=>{
    <p class="loading" v-if="job_posts_loading">Loading...</p>
    <p v-if="job_posts_error" style="color:red"> {{job_posts_error}}</p>
     <ol class="job_lists" v-if="jobLists.length && !job_posts_loading">
-      <li  class="card_Item" v-bind:key="post._id" v-for="post of jobLists" >      
+      <li @click="openEditModal(post._id , post)" class="card_Item" v-bind:key="post._id" v-for="post of jobLists" >      
       <div v-if="post" class="left">
         <p v-if="post.title" class="title">{{ post.title }}</p>
         <p v-if="post.description" class="description">{{post.description ?? "Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf." }}</p>
@@ -205,6 +205,7 @@ box-shadow:0 0px 20px 0px #00000038;
     }
     textarea{
       min-width: 100%;
+      min-height: 25vh;
     }
     flex-direction: column;
     textarea , input{
@@ -346,4 +347,3 @@ button{
   border-radius: 10px;
 }
 </style>
-../types.js
