@@ -117,6 +117,7 @@ function resetForm() {
 async function addLists() {
   if(!editModalForm.value) return;
   // const formData = new FormData();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {_id , ...data} = editModalForm.value
   const newData = {
     ...editModalForm.value ? (data ): {},
@@ -210,7 +211,12 @@ box-shadow:0 0px 20px 0px #00000038;
     flex-direction: column;
     textarea , input{
       font-size: 1.3rem;
+      color:#5e5e5e !important;
+      &:focus{
+        color:black;
+      }
     }
+    
     input{
       border-radius: 10px !important;
     }

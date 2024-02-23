@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { JobPost } from '@/types';
 import { ref } from 'vue';
-
+import {FormKit} from '@formkit/vue'
 const props = defineProps<{
 	resetForm: () => void;
 	closeModal: () => void;
@@ -42,6 +42,14 @@ export default {
 	        <h1>Create Job Post</h1>
 	        <button type="button" @click="closeModal">x</button>
 	      </header>
+		  <!-- <FormKit class="jobForm" @submit.prevent="onsubmit" type="form">
+	    <FormKit
+	      type="text"
+	      validation="required|not:Admin"
+	      label="Title"
+	     class="jobTitleInput" id="jobTitle" name="jobTitle" placeholder="Add Job Title" 
+	    />
+		</FormKit> -->
 	      <form class="jobForm" @submit.prevent="onsubmit" >
 	        <label for="jobTitle">Title
 		        <input
@@ -62,3 +70,189 @@ export default {
 	     </form>
 	
 </template>
+<style scoped>
+dialog {
+	min-width: 50vw;
+	/* max-width: 55vw; */
+	margin: auto;
+	border: 1px solid rgba(128, 128, 128, 0.404);
+	box-shadow: 0 0px 20px 0px #00000038;
+	border-radius: 1rem;
+
+	form.jobForm {
+		label {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+		}
+
+		textarea {
+			min-width: 100%;
+			min-height: 25vh;
+		}
+
+		flex-direction: column;
+
+		textarea,
+		input {
+			font-size: 1.3rem !important;
+		}
+
+		input {
+			border-radius: 10px !important;
+		}
+	}
+
+	form {
+
+		label {
+			font-weight: bold;
+			color: gray;
+		}
+	}
+
+	>form>* {
+		width: 100%;
+	}
+}
+
+dialog header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.job_lists {
+	display: flex;
+	flex-direction: column;
+	gap: .8rem;
+	margin-bottom: 2rem;
+
+	button {
+		min-width: 90px;
+	}
+
+	padding: 0;
+
+	.card_Item {
+
+		gap: 1rem;
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		flex-wrap: wrap;
+
+		.left {
+			display: flex;
+			justify-content: space-between;
+			flex: 1;
+			flex-direction: column;
+
+			/* max-width: 71vw; */
+			/* max-width: 35vw; */
+			white-space: nowrap;
+			-webkit-line-clamp: 3;
+			line-clamp: 3;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			-webkit-box-orient: vertical;
+		}
+
+		.title {
+			font-weight: bold;
+			/* max-width: 50%; */
+			flex: 1;
+			-webkit-line-clamp: 1;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		.description {
+			flex: 1;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			display: -webkit-box;
+			-webkit-line-clamp: 2;
+			line-clamp: 2;
+			-webkit-box-orient: vertical;
+			white-space: break-spaces;
+		}
+
+		.date {
+			color: gray;
+		}
+	}
+}
+
+@media (min-width: 1024px) {
+	.welcome {
+		min-height: 100vh;
+		/* position: relative;
+    top: 35vh; */
+		padding-top: 35vh;
+	}
+
+	.job_lists {
+		.card_Item {
+			max-width: 385px;
+		}
+	}
+}
+.jobTitleInput {
+	padding: .5rem 1rem;
+	border-radius: 1rem;
+	border: 1px solid gray;
+	font-size: 1.3rem;
+
+	&:focus {
+		border: 1px solid var(--primary-color);
+		outline: 1px solid var(--primary-color);
+	}
+}
+form.jobForm {
+	position: sticky;
+	top: 0;
+	background: white;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	gap: 1rem;
+	align-items: center;
+	font-size: 1rem;
+
+	input {
+		min-height: 45px;
+		flex: 1;
+	}
+
+	.submit {
+		min-width: 90px;
+		min-height: 45px;
+		font-weight: 600;
+		color: var(--primary-color);
+		background-color: rgb(0 140 141 / 26%);
+	}
+}
+
+.listsContainer {
+	display: flex;
+	gap: 1rem;
+
+}
+
+button.danger {
+	background: #ffd6d6;
+	color: red;
+}
+
+
+
+button {
+	/* background-color: rgba(143, 143, 255); */
+	background-color: var(--primary-color);
+	color: white;
+	padding: .5rem 1rem;
+	border: 0;
+	margin-block: 1rem;
+	border-radius: 10px;
+}</style>
