@@ -3,6 +3,7 @@ import { onMounted, onUnmounted, ref , type Ref } from 'vue';
 import type {JobPost} from 'src/types'
 import EditJobPostForm from './EditJobPostForm.vue'
 import AddJobPostForm from './AddJobPostForm.vue';
+import {reset} from '@formkit/vue'
 // import TheWelcome from '../components/TheWelcome.vue'
 const title = ref("wonJob")
 const job_posts_error : Ref<unknown> = ref(null)
@@ -57,7 +58,6 @@ function closeAddModal() {
 const modal  = addModalRef.value
 modal.close()
 }
-resetForm()
 }
 function closeEditModal() {
  if(editModalRef.value){
@@ -88,7 +88,7 @@ async function openAddModal() {
   // jobLists.value = jobLists.value.filter(j => j._id !== _id)
   // await fetch(`${Backend_URL}/api/job_posts?id=`+_id, {method:"PATCH" , body:JSON.stringify(newData)})
 }
-async function editForm() {
+async function submitEditForm() {
   if(!editModalForm.value ) return;
   const newData = editModalForm.value;
   const postId = newData._id
@@ -97,13 +97,13 @@ const updateData = {...newData ,updatedAt:Date.now()}
     await fetch(`${Backend_URL}/api/job_posts?id=`+postId, {method:"PUT" , body:JSON.stringify(updateData),headers: {
       "Content-Type": "application/json",
     }})
-    editModalRef.value?.close()
+    closeEditModal()
   } catch (error) {
     console.log(error);
   }
   getJobLists();
 }
-async function deleteLists(_id: JobPost["_id"]) {
+const deleteLists = async(_id: JobPost["_id"]) =>{
   try {
     await fetch(`${Backend_URL}/api/job_posts?id=`+_id, {method:"DELETE"})
     jobLists.value = jobLists.value.filter(j => j._id !== _id)
@@ -111,33 +111,27 @@ async function deleteLists(_id: JobPost["_id"]) {
     console.log(error);
   }
 }
+function resetAddForm() {
+  reset('AddNewForm');
+}
 function resetForm() {
   editModalForm.value = null
 }
-async function addLists() {
-  if(!editModalForm.value) return;
-  // const formData = new FormData();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const {_id , ...data} = editModalForm.value
-  const newData = {
-    ...editModalForm.value ? (data ): {},
-    createdAt: Date.now()
-  }
-  console.log("add : " + JSON.stringify(newData));
-  try {
-    await fetch(`${Backend_URL}/api/job_posts?title=${editModalForm.value?.title}`, {method:"POST", body:JSON.stringify(newData) , headers: {
-      "Content-Type": "application/json",      
-    },
-  } )
-  getJobLists();
-  resetForm();
-  closeAddModal();
-} catch (error) {
-    add_job_posts_loading.value = false;
-    throw new Error(`${error}`);
-  }
+// async function submitAddForm() {
+//   try {
+//     await fetch(`${Backend_URL}/api/job_posts?title=${editModalForm.value?.title}`, {method:"POST", body:JSON.stringify(newData) , headers: {
+//       "Content-Type": "application/json",      
+//     },
+//   } )
+//   getJobLists();
+//   // resetForm();
+//   closeAddModal();
+// } catch (error) {
+//     add_job_posts_loading.value = false;
+//     throw new Error(`${error}`);
+//   }
   
-}
+// }
 onMounted(() => {
   getJobLists();
 })
@@ -158,7 +152,7 @@ onUnmounted(()=>{
       <button type="button" @click="jobLists.reverse()">Reverse</button>
       <button type="button" @click="jobLists = []">Clear</button>
    </div>
-   <form class="jobForm" @submit.prevent="addLists">
+   <form class="AddNewForm" >
     <input style="cursor: pointer;" @click="openAddModal" readonly class="jobTitleInput" type="search" name="jobTitle" placeholder="Add Job Title" />
      <button :disabled="false" class="submit" type="button" @click="openAddModal">
     {{ false ? "Adding" : "Add New" }}
@@ -167,23 +161,23 @@ onUnmounted(()=>{
    <p class="loading" v-if="job_posts_loading">Loading...</p>
    <p v-if="job_posts_error" style="color:red"> {{job_posts_error}}</p>
     <ol class="job_lists" v-if="jobLists.length && !job_posts_loading">
-      <li @click="openEditModal(post._id , post)" class="card_Item" v-bind:key="post._id" v-for="post of jobLists" >      
-      <div v-if="post" class="left">
+      <li class="card_Item" v-bind:key="post._id" v-for="post of jobLists" >      
+      <div  @click="openEditModal(post._id, post)" v-if="post" class="left">
         <p v-if="post.title" class="title">{{ post.title }}</p>
-        <p v-if="post.description" class="description">{{post.description ?? "Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf.Two line description nn dfdf." }}</p>
+        <p v-if="post.description" class="description">{{post.description}}</p>
         <p v-if="post.createdAt" class="date">{{ post?.createdAt ? new Date(post.createdAt).toLocaleDateString() : "" }}</p>
       </div>
     <button class="submit" @click="openEditModal(post._id , post)">Edit</button>
     <button class="danger" @click="deleteLists(post._id)">Delete</button>
     </li>
     </ol>
-    <dialog  @close="resetForm" ref="addModalRef">
-      <AddJobPostForm  :resetForm="resetForm" :closeModal="closeAddModal" :submitAddForm="addLists" 
+    <dialog  @close="resetAddForm" ref="addModalRef">
+      <AddJobPostForm :Backend_URL="Backend_URL"  :resetForm="resetAddForm" :closeModal="closeAddModal" :getJobLists="getJobLists" 
       :editModalForm="editModalForm" @update:modelValue="editModalForm = $event" 
         />
     </dialog>
     <dialog  @close="resetForm" ref="editModalRef">
-    <EditJobPostForm  :resetForm="resetForm" v-if="editModalForm" :closeModal="closeEditModal" :submitEditForm="editForm" 
+    <EditJobPostForm :resetForm="resetForm" v-if="editModalForm" :closeModal="closeEditModal" :submitEditForm="submitEditForm" 
     :editModalForm="editModalForm" @update:modelValue="editModalForm = $event" 
       />
     </dialog>
@@ -198,7 +192,7 @@ dialog{
   border: 1px solid rgba(128, 128, 128, 0.404);
 box-shadow:0 0px 20px 0px #00000038;
   border-radius: 1rem;
-  form.jobForm{
+  .AddNewForm , .editForm{
     label{
       display: flex;
       flex-direction: column;
@@ -254,13 +248,11 @@ dialog header{
   justify-content: space-between;
   flex-wrap: wrap;
   .left{
+    cursor: pointer;
     display: flex;
     justify-content: space-between;
     flex:1;
     flex-direction: column;
-
-    /* max-width: 71vw; */
-    /* max-width: 35vw; */
     white-space: nowrap;
     -webkit-line-clamp: 3;
     line-clamp: 3; 
@@ -270,7 +262,6 @@ dialog header{
   }
   .title{
     font-weight: bold;
-    /* max-width: 50%; */
     flex:1;
     -webkit-line-clamp: 1;
     overflow: hidden;
@@ -302,7 +293,7 @@ dialog header{
   max-width: 385px;
 }}
 }
-form.jobForm{
+.AddNewForm , .editForm{
       position: sticky;
     top: 0;
     background: white;

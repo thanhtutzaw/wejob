@@ -39,7 +39,7 @@ const onsubmit = async() => {
 	        <h1 style="font-size: 1.5rem; font-weight: bold;">Edit Post</h1>
 	        <button type="button" @click="closeModal">x</button>
 	      </header>
-	      <form class="jobForm" @submit.prevent="onsubmit">
+	      <form class="editForm" @submit.prevent="onsubmit">
 	        <label for="jobTitle">Title
 	        <input
 	      @input="updateTitle"

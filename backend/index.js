@@ -122,8 +122,8 @@ app.put(`/api/${job_posts}`, async (req, res) => {
     );
     const query = { _id: ObjectId(req.query.id) };
     const body = req.body;
-
-    let results = await collection.updateOne(query, { $set: { title: body.title, description: body.description } }, { upsert: true });
+    const { _id, ...newData } = body;
+    let results = await collection.updateOne(query, { $set: newData }, { upsert: true });
     res
       .send("Updated List Successfully : " + JSON.stringify(results) + JSON.stringify(body))
       .status(200);

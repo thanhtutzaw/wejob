@@ -1,6 +1,7 @@
 {
   "extends": "../frontend/tsconfig.app.json",
   "exclude": [],
+  "include": ["./formkit.config.ts"],
   "compilerOptions": {
     "composite": true,
     // "tsBuildInfoFile": "../frontend/node_modules/tmp/ts",

@@ -2,22 +2,47 @@
 import type { JobPost } from '@/types';
 import { ref } from 'vue';
 import {FormKit} from '@formkit/vue'
+
 const props = defineProps<{
 	resetForm: () => void;
+	Backend_URL: string;
 	closeModal: () => void;
-	submitAddForm:  () => Promise<void>;
+	getJobLists:  () => void;
 		editModalForm: JobPost | null;
+		
 }>()
+
 const loading= ref(false);
 console.log(props);
-const onsubmit = async () => {
-	loading.value = true;
-	try {
-		await props.submitAddForm()
-		loading.value = false;
-		props.resetForm();
-	} catch (error) {
-		loading.value = false;
+// const castRangeToNumber = (node) => {
+//   // We add a check to add the cast only to range inputs
+//   if (node.props.type !== 'range') return
+
+//   node.hook.input((value, next) => next(Number(value)))
+// }
+
+// const createCharacter = async (fields) => {
+//   await new Promise((r) => setTimeout(r, 1000))
+  
+// }
+const onsubmit = async (fields:JobPost) => {
+	 const { _id, ...data } = fields;
+	 const newData = {
+		 ...fields ? (data) : {},
+		 createdAt: Date.now()
+		}
+		loading.value = true;
+		try {
+		await fetch(`${props.Backend_URL}/api/job_posts?title=${fields.title}`, {
+			method: "POST", body: JSON.stringify(newData), headers: {
+				"Content-Type": "application/json",
+			}})
+			loading.value = false;
+			props.getJobLists();
+			props.closeModal();
+			props.resetForm();
+		} catch (error) {
+			loading.value = false;
 		console.log(error);
 	}
 };
@@ -28,49 +53,52 @@ const updateTitle = (e: Event) => {
 const updateDescription = (e: Event) => {
 	emit('update:modelValue', { ...props.editModalForm, description: (e.target as HTMLTextAreaElement).value });
 };
-</script>
-	<!-- 
-export default {
-	props: {
-		: (newData: JobPost) => Promise<void>,
-		editModalForm: JobPost;
-	},
-}; -->
 
+</script>
 <template>
 	      <header>
 	        <h1>Create Job Post</h1>
 	        <button type="button" @click="closeModal">x</button>
 	      </header>
-		  <!-- <FormKit class="jobForm" @submit.prevent="onsubmit" type="form">
+		  <FormKit id="AddNewForm" class="AddNewForm" @submit="onsubmit" type="form" #default="{ value }" >
 	    <FormKit
 	      type="text"
-	      validation="required|not:Admin"
+	      validation="required|length:4"
 	      label="Title"
-	     class="jobTitleInput" id="jobTitle" name="jobTitle" placeholder="Add Job Title" 
+	     class="jobTitleInput" id="title" name="title" placeholder="Add Job Title" 
 	    />
-		</FormKit> -->
-	      <form class="jobForm" @submit.prevent="onsubmit" >
-	        <label for="jobTitle">Title
+	    <FormKit
+	      type="textarea"
+		  validation="required|length:4"
+	      label="Description"
+	     class="jobTitleInput" id="description" name="description" placeholder="Add Job Description" 
+	    />
+		 <pre wrap>{{ value }}</pre>
+		</FormKit>
+	        <!-- <label for="jobTitle">Title
 		        <input
 		      @input="updateTitle"
 				required 
 				 :value="props.editModalForm?.title"  
 				class="jobTitleInput" name="jobTitle" id="jobTitle" placeholder="Add Job Title"  />
-		        </label>
+		        </label> -->
 				 <!-- @input="$emit('update:modelValue' , ($event.target as HTMLInputElement).value)" -->
-		        <label required for="jobDescription">Description
+		        <!-- <label required for="jobDescription">Description
 		        <textarea :value="props.editModalForm?.description" 
 				@input="updateDescription"
 				 class="jobTitleInput" id="jobDescription" name="jobDescription" placeholder="Add Job Description"   ></textarea>
-		        </label>
-	       <button :disabled="loading" class="submit" type="submit">
+		        </label> -->
+	       <!-- <button :disabled="loading" class="submit" type="submit">
 	      {{ loading ? "Creating" : "Create" }}
-	      </button>
-	     </form>
+	      </button> -->
 	
 </template>
 <style scoped>
+/* .formkit-input {
+  border-color : var(--primary-color) !important;
+  outline-color: var(--primary-color) !important;
+} */
+
 dialog {
 	min-width: 50vw;
 	/* max-width: 55vw; */
@@ -79,7 +107,7 @@ dialog {
 	box-shadow: 0 0px 20px 0px #00000038;
 	border-radius: 1rem;
 
-	form.jobForm {
+	.AddNewForm {
 		label {
 			display: flex;
 			flex-direction: column;
@@ -212,7 +240,7 @@ dialog header {
 		outline: 1px solid var(--primary-color);
 	}
 }
-form.jobForm {
+.AddNewForm {
 	position: sticky;
 	top: 0;
 	background: white;
@@ -227,13 +255,15 @@ form.jobForm {
 		min-height: 45px;
 		flex: 1;
 	}
-
-	.submit {
+/* >*{
+	border:2px solid red;
+} */
+	.submit , [data-type=submit] .formkit-input {
 		min-width: 90px;
 		min-height: 45px;
 		font-weight: 600;
 		color: var(--primary-color);
-		background-color: rgb(0 140 141 / 26%);
+		background-color: rgb(0 140 141 / 26%) !important;
 	}
 }
 
