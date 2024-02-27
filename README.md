@@ -4,6 +4,12 @@
 
 <p text-align="center"><img src="https://skillicons.dev/icons?i=vue,mongo,nodejs,express" /></p>
     
+* [x] MEVN CRUD
+* [x] FormKit
+* [ ] Pinia
+* [ ] SSR
+* [ ] Docker
+* [ ] BlockChain
 
 ## Setup
 
