@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "install-server": "cd backend && npm install",
+    "build-ts-server": "cd backend && npm run build",
     "start-server": "cd backend && set NODE_ENV=production&& npm run start",
     "start-dev-server": "cd backend && set NODE_ENV=development&& npm run dev",
     "install-client": "cd frontend && npm install",

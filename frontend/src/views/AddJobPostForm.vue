@@ -3,8 +3,15 @@ import type { JobPost } from '@/types';
 import { ref } from 'vue';
 import { FormKit } from '@formkit/vue'
 import { createZodPlugin } from '@formkit/zod';
-import { JobPostSchema, mySchema } from "../../../shared/JobPostSchema";
-
+import {z} from 'zod'
+// import { JobPostSchema, mySchema } from "../../../shared/JobPostSchema";
+const JobPostSchema = z.object({
+  // _id: z.instanceof(ObjectId),
+  title: z.string().min(4).trim(),
+  description: z.string().min(4).trim(),
+  // createdAt: z.date().nullable(),
+  // updatedAt: z.date().nullable()
+});
 const props = defineProps<{
 	resetForm: () => void;
 	Backend_URL: string;
@@ -55,7 +62,7 @@ const formValues = ref({ title: "", description: "" })
 </script>
 <template>
 	<header>
-		<h1>Create Job Post - {{ mySchema }}</h1>
+		<h1>Create Job Post - {{ "mySchema" }}</h1>
 		<button type="button" @click="closeModal">x</button>
 	</header>
 	<FormKit :plugins="[zodPlugin]" submit-label="Create" id="AddNewForm" class="AddNewForm" @submit="submitHandler"
