@@ -5,8 +5,6 @@
     "src/**/*",
     "src/**/*.vue",
     "./formkit.config.ts",
-    "../shared/JobPostSchema.ts",
-    "../shared/**/*.ts"
   ],
   "exclude": ["src/**/__tests__/*"],
   "compilerOptions": {
