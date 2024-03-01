@@ -1,107 +1,78 @@
 <script setup lang="ts">
 import type { JobPost } from '@/types';
 import { ref } from 'vue';
-import {FormKit} from '@formkit/vue'
+import { FormKit } from '@formkit/vue'
+import { createZodPlugin } from '@formkit/zod';
+import { JobPostSchema, mySchema } from "../../../shared/JobPostSchema.js";
 
 const props = defineProps<{
 	resetForm: () => void;
 	Backend_URL: string;
 	closeModal: () => void;
-	getJobLists:  () => void;
-		editModalForm: JobPost | null;
-		
+	getJobLists: () => void;
+	editModalForm: JobPost | null;
 }>()
 
-const loading= ref(false);
+const loading = ref(false);
 console.log(props);
 // const castRangeToNumber = (node) => {
 //   // We add a check to add the cast only to range inputs
 //   if (node.props.type !== 'range') return
-
 //   node.hook.input((value, next) => next(Number(value)))
 // }
-
-// const createCharacter = async (fields) => {
-//   await new Promise((r) => setTimeout(r, 1000))
-  
-// }
-const onsubmit = async (fields:JobPost) => {
-	 const { _id, ...data } = fields;
-	 const newData = {
-		 ...fields ? (data) : {},
-		 createdAt: Date.now()
-		}
-		loading.value = true;
-		try {
+const [zodPlugin, submitHandler] = createZodPlugin(JobPostSchema, async (fields) => {
+	// const { _id, ...data } = fields;
+	const { ...data } = fields;
+	const newData = {
+		...fields ? (data) : {},
+		// createdAt: Date.now()
+	}
+	loading.value = true;
+	try {
 		await fetch(`${props.Backend_URL}/api/job_posts?title=${fields.title}`, {
 			method: "POST", body: JSON.stringify(newData), headers: {
 				"Content-Type": "application/json",
-			}})
-			loading.value = false;
-			props.getJobLists();
-			props.closeModal();
-			props.resetForm();
-		} catch (error) {
-			loading.value = false;
+			}
+		})
+		loading.value = false;
+		props.getJobLists();
+		props.closeModal();
+		props.resetForm();
+	} catch (error) {
+		loading.value = false;
 		console.log(error);
 	}
-};
-const emit = defineEmits(["update:modelValue"])
-const updateTitle = (e: Event) => {
-	emit('update:modelValue', { ...props.editModalForm, title: (e.target as HTMLInputElement).value });
-};
-const updateDescription = (e: Event) => {
-	emit('update:modelValue', { ...props.editModalForm, description: (e.target as HTMLTextAreaElement).value });
-};
+})
 
+const emit = defineEmits(["update:modelValue"])
+// const updateTitle = (e: Event) => {
+// 	emit('update:modelValue', { ...props.editModalForm, title: (e.target as HTMLInputElement).value });
+// };
+// const updateDescription = (e: Event) => {
+// 	emit('update:modelValue', { ...props.editModalForm, description: (e.target as HTMLTextAreaElement).value });
+// };
+const formValues = ref({ title: "", description: "" })
 </script>
 <template>
-	      <header>
-	        <h1>Create Job Post</h1>
-	        <button type="button" @click="closeModal">x</button>
-	      </header>
-		  <FormKit id="AddNewForm" class="AddNewForm" @submit="onsubmit" type="form" #default="{ value }" >
-	    <FormKit
-	      type="text"
-	      validation="required|length:4"
-	      label="Title"
-	     class="jobTitleInput" id="title" name="title" placeholder="Add Job Title" 
-	    />
-	    <FormKit
-	      type="textarea"
-		  validation="required|length:4"
-	      label="Description"
-	     class="jobTitleInput" id="description" name="description" placeholder="Add Job Description" 
-	    />
-		 <pre wrap>{{ value }}</pre>
-		</FormKit>
-	        <!-- <label for="jobTitle">Title
-		        <input
-		      @input="updateTitle"
-				required 
-				 :value="props.editModalForm?.title"  
-				class="jobTitleInput" name="jobTitle" id="jobTitle" placeholder="Add Job Title"  />
-		        </label> -->
-				 <!-- @input="$emit('update:modelValue' , ($event.target as HTMLInputElement).value)" -->
-		        <!-- <label required for="jobDescription">Description
-		        <textarea :value="props.editModalForm?.description" 
-				@input="updateDescription"
-				 class="jobTitleInput" id="jobDescription" name="jobDescription" placeholder="Add Job Description"   ></textarea>
-		        </label> -->
-	       <!-- <button :disabled="loading" class="submit" type="submit">
-	      {{ loading ? "Creating" : "Create" }}
-	      </button> -->
-	
+	<header>
+		<h1>Create Job Post - {{ mySchema }}</h1>
+		<button type="button" @click="closeModal">x</button>
+	</header>
+	<FormKit :plugins="[zodPlugin]" submit-label="Create" id="AddNewForm" class="AddNewForm" @submit="submitHandler"
+		type="form" v-model="formValues">
+		<FormKit :validation-visibility="`${formValues && formValues.title && formValues.title.length > 0 ? 'live' : ''}`"
+			type="text" validation="required|length:4" label="Title" class="jobTitleInput" id="title" name="title"
+			placeholder="Add Job Title" />
+		<FormKit
+			:validation-visibility="`${formValues && formValues.description && formValues?.description.length > 0 ? 'live' : ''}`"
+			type="textarea" validation="required|length:4" label="Description" class="jobTitleInput" id="description"
+			name="description" placeholder="Add Job Description" />
+		<pre wrap>{{ formValues }}</pre>
+	</FormKit>
 </template>
 <style scoped>
-/* .formkit-input {
-  border-color : var(--primary-color) !important;
-  outline-color: var(--primary-color) !important;
-} */
-
 dialog {
 	min-width: 50vw;
-	/* max-width: 55vw; */
 	margin: auto;
 	border: 1px solid rgba(128, 128, 128, 0.404);
 	box-shadow: 0 0px 20px 0px #00000038;
@@ -124,9 +95,10 @@ dialog {
 		textarea,
 		input {
 			font-size: 1.3rem !important;
-			 &:focus{
-        color:black !important;
-      }
+
+			&:focus {
+				color: black !important;
+			}
 		}
 
 		input {
@@ -229,6 +201,7 @@ dialog header {
 		}
 	}
 }
+
 .jobTitleInput {
 	padding: .5rem 1rem;
 	border-radius: 1rem;
@@ -240,6 +213,7 @@ dialog header {
 		outline: 1px solid var(--primary-color);
 	}
 }
+
 .AddNewForm {
 	position: sticky;
 	top: 0;
@@ -255,16 +229,25 @@ dialog header {
 		min-height: 45px;
 		flex: 1;
 	}
-/* >*{
+
+	/* >*{
 	border:2px solid red;
 } */
-	.submit , [data-type=submit] .formkit-input {
+	.submit,
+	[data-type=submit] .formkit-input {
 		min-width: 90px;
 		min-height: 45px;
 		font-weight: 600;
 		color: var(--primary-color);
 		background-color: rgb(0 140 141 / 26%) !important;
 	}
+}
+
+pre {
+	max-width: 50vw;
+	max-height: 30vw;
+	overflow: auto;
+	margin: 0 auto;
 }
 
 .listsContainer {
@@ -288,4 +271,5 @@ button {
 	border: 0;
 	margin-block: 1rem;
 	border-radius: 10px;
-}</style>
+}
+</style>

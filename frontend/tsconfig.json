@@ -13,5 +13,8 @@
   ],
   "compilerOptions": {
     "module": "NodeNext"
+    // "module": "CommonJS",
+    // "esModuleInterop": true,
+    // "target": "ESNext"
   }
 }

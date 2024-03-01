@@ -1,7 +1,7 @@
 export interface JobPost {
   title: string;
   _id: string;
-  createdAt: Date | null;
+  createdAt: Date | number | null;
   updatedAt: Date | null;
   description: string;
 } 

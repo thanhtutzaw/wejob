@@ -3,15 +3,19 @@
 <br> Backend - [https://wonjob-backend.vercel.app/api/job_posts](https://wonjob-backend.vercel.app/api/job_posts)
 
 <p text-align="center"><img src="https://skillicons.dev/icons?i=vue,mongo,nodejs,express" /></p>
-    
+
+Project is created with:
+
 * [x] MEVN CRUD
 * [x] FormKit
-* [ ] Pinia
+* [ ] Zod
+* [ ] Router , Route Guard
+* [ ] Viewx , Pinia
+* [ ] GraphQL
 * [ ] SSR
 * [ ] Docker
-* [ ] BlockChain
-
-## Setup
+* [ ] Kubernetes
+* [ ] crypto wallets
 
 ## Setup
 

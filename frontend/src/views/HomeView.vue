@@ -5,10 +5,9 @@ import EditJobPostForm from './EditJobPostForm.vue'
 import AddJobPostForm from './AddJobPostForm.vue';
 import {reset} from '@formkit/vue'
 // import TheWelcome from '../components/TheWelcome.vue'
-const title = ref("wonJob")
+const AppTitle = ref("wonJob")
 const job_posts_error : Ref<unknown> = ref(null)
 const toggle = ref(false)
-const add_job_posts_loading  = ref(false);
 const editModalRef = ref<HTMLDialogElement | null>(null)
 const addModalRef = ref<HTMLDialogElement | null>(null)
 const job_posts_loading  = ref(false)
@@ -21,7 +20,7 @@ const editModalForm : Ref<JobPost | null> = ref(null)
 //           updatedAt: null,
 // }
 function toggleTitle() {
-  title.value = toggle.value ? "wonJob" : "Let's Go"
+  AppTitle.value = toggle.value ? "wonJob" : "Let's Go"
   toggle.value = !toggle.value;
 }
 const jobLists : Ref<JobPost[]> = ref([])
@@ -117,22 +116,9 @@ function resetAddForm() {
 function resetForm() {
   editModalForm.value = null
 }
-// async function submitAddForm() {
-//   try {
-//     await fetch(`${Backend_URL}/api/job_posts?title=${editModalForm.value?.title}`, {method:"POST", body:JSON.stringify(newData) , headers: {
-//       "Content-Type": "application/json",      
-//     },
-//   } )
-//   getJobLists();
-//   // resetForm();
-//   closeAddModal();
-// } catch (error) {
-//     add_job_posts_loading.value = false;
-//     throw new Error(`${error}`);
-//   }
-  
-// }
 onMounted(() => {
+  console.log(import.meta.env.DEV);
+  console.log(import.meta.env.PROD);
   getJobLists();
 })
 onUnmounted(()=>{
@@ -143,7 +129,7 @@ onUnmounted(()=>{
 <template>
   <main class="welcome">
    <div>
-     <h1>{{ title }}</h1>
+     <h1>{{ AppTitle }}</h1>
      <h3>Let's finish your Job search journey together 🙉 🚀</h3>
      <button @click="toggleTitle" type="button">Get Started</button>
    </div>
