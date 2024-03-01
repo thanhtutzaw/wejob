@@ -11,9 +11,20 @@
     "install-client": "cd frontend && npm install",
     "dev-client": "cd frontend && npm run dev",
     "build-client": "cd frontend && npm run build",
-    "start-client": "cd frontend && npm run preview"
+    "start-client": "cd frontend && npm run preview",
+    "ts.check": "tsc --project tsconfig.json",
+    "add-build": "git add ./backend/dist"
   },
+  "pre-commit": [
+    "ts.check",
+    "build-ts-server",
+    "add-build"
+  ],
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "pre-commit": "^1.2.2",
+    "rimraf": "^5.0.5"
+  }
 }
