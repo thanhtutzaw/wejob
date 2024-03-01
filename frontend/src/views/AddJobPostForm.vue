@@ -3,7 +3,7 @@ import type { JobPost } from '@/types';
 import { ref } from 'vue';
 import { FormKit } from '@formkit/vue'
 import { createZodPlugin } from '@formkit/zod';
-import { JobPostSchema, mySchema } from "../../../shared/JobPostSchema.js";
+import { JobPostSchema, mySchema } from "../../../shared/JobPostSchema";
 
 const props = defineProps<{
 	resetForm: () => void;
