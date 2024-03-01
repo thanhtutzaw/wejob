@@ -12,7 +12,7 @@
     "dev-client": "cd frontend && npm run dev",
     "build-client": "cd frontend && npm run build",
     "start-client": "cd frontend && npm run preview",
-    "ts.check": "tsc --project tsconfig.json",
+    "ts.check": "tsc --project ./backend/tsconfig.json",
     "add-build": "git add ./backend/dist"
   },
   "pre-commit": [

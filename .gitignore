@@ -8,7 +8,6 @@ pnpm-debug.log*
 lerna-debug.log*
 
 .DS_Store
-dist
 dist-ssr
 coverage
 *.local
@@ -59,3 +58,4 @@ node_modules/
 *.sw?
 
 *.tsbuildinfo
+frontend/dist
