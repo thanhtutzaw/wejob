@@ -8,7 +8,7 @@ Project is created with:
 
 * [x] MEVN CRUD
 * [x] FormKit
-* [ ] Zod
+* [x] Zod , Turbo Mono Repo
 * [ ] Router , Route Guard
 * [ ] Viewx , Pinia
 * [ ] GraphQL
