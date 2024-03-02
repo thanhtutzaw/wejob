@@ -1,23 +1,22 @@
 <script setup lang="ts">
-import type { JobPost } from '@/types';
+// import type { JobPost } from '@/types';
 import { ref } from 'vue';
 import { FormKit } from '@formkit/vue'
 import { createZodPlugin } from '@formkit/zod';
-import {z} from 'zod'
-// import { JobPostSchema, mySchema } from "../../../shared/JobPostSchema";
-const JobPostSchema = z.object({
-  // _id: z.instanceof(ObjectId),
-  title: z.string().min(4).trim(),
-  description: z.string().min(4).trim(),
-  // createdAt: z.date().nullable(),
-  // updatedAt: z.date().nullable()
-});
+import { JobPostSchema, mySchema, type JobPostType } from "@wonjob/shared-types/index";
+// const JobPostSchema = z.object({
+//   // _id: z.instanceof(ObjectId),
+//   title: z.string().min(4).trim(),
+//   description: z.string().min(4).trim(),
+//   // createdAt: z.date().nullable(),
+//   // updatedAt: z.date().nullable()
+// });
 const props = defineProps<{
 	resetForm: () => void;
 	Backend_URL: string;
 	closeModal: () => void;
 	getJobLists: () => void;
-	editModalForm: JobPost | null;
+	editModalForm: JobPostType | null;
 }>()
 
 const loading = ref(false);
@@ -60,14 +59,16 @@ const emit = defineEmits(["update:modelValue"])
 // };
 const formValues = ref({ title: "", description: "" })
 </script>
+
 <template>
 	<header>
-		<h1>Create Job Post - {{ "mySchema" }}</h1>
+		<h1>Create Job Post - {{ mySchema }}</h1>
 		<button type="button" @click="closeModal">x</button>
 	</header>
 	<FormKit :plugins="[zodPlugin]" submit-label="Create" id="AddNewForm" class="AddNewForm" @submit="submitHandler"
 		type="form" v-model="formValues">
-		<FormKit :validation-visibility="`${formValues && formValues.title && formValues.title.length > 0 ? 'live' : ''}`"
+		<FormKit
+			:validation-visibility="`${formValues && formValues.title && formValues.title.length > 0 ? 'live' : ''}`"
 			type="text" validation="required|length:4" label="Title" class="jobTitleInput" id="title" name="title"
 			placeholder="Add Job Title" />
 		<FormKit
@@ -77,6 +78,7 @@ const formValues = ref({ title: "", description: "" })
 		<pre wrap>{{ formValues }}</pre>
 	</FormKit>
 </template>
+
 <style scoped>
 dialog {
 	min-width: 50vw;

@@ -2,8 +2,11 @@ import dotenv from "dotenv";
 dotenv.config();
 import Express from "express";
 import cors from "cors";
+// import { mySchema } from "../../packages/index";
 import { MongoClient, ObjectId } from "mongodb";
 // import { JobPostSchema , mySchema } from "../shared/JobPostSchema";
+import { JobPostSchema, type JobPostType } from "@wonjob/shared-types/index";
+
 import { z } from "zod";
 const app = Express();
 const CONNECTION_STRING = process.env.MONGO_ATLAS_URL ?? "";
@@ -26,7 +29,6 @@ client = new MongoClient(CONNECTION_STRING, {
 const jobPostCollection = client.db(DB_NAME).collection(job_posts);
 
 app.listen(port, () => {
-  
   console.log(`Listening: http://localhost:${port}`);
   console.log("Backend Node Env - " + process.env.NODE_ENV);
   console.log(
@@ -75,8 +77,8 @@ app.post(`/api/${job_posts}`, async (req, res) => {
       "Request Body:  " + req.body ? JSON.stringify(req.body) : req.body
     );
     const body = req.body;
-    // const validData = JobPostSchema.parse(body);
-    const validData = body;
+    const validData = JobPostSchema.parse(body);
+    // const validData = body;
     const newData = {
       ...validData,
       createdAt: Date.now(),

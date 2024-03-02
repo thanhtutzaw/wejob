@@ -1,0 +1,1 @@
+import{_ as e,o,c as t,a as n}from"./index-owKiYA2o.js";const c={},s=n("p",{class:"notFound"},"Not Found Page - 404",-1),a=[s];function _(r,d){return o(),t("main",null,a)}const u=e(c,[["render",_]]);export{u as default};

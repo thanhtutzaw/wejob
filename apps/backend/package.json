@@ -1,11 +1,11 @@
 {
-  "name": "backend",
+  "name": "@wonjob/backend",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "rimraf dist && tsc",
-    "start": "node ./dist/index.js",
+    "build": "tsup index.ts --format cjs",
+    "start": "node dist/index.js",
     "dev": "npx nodemon index.ts",
     "ts.check": "tsc --project tsconfig.json",
     "add-build": "git add dist",
@@ -37,6 +37,7 @@
     "rimraf": "^5.0.5",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
+    "tsup": "^8.0.2",
     "typescript": "^5.3.3"
   }
 }

@@ -12,7 +12,9 @@
     }
   ],
   "compilerOptions": {
-    "module": "NodeNext"
+    "module": "NodeNext",
+    "outDir": "./dist",
+    "rootDir": "./src"
     // "module": "CommonJS",
     // "esModuleInterop": true,
     // "target": "ESNext"

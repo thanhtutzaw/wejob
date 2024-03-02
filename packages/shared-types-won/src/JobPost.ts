@@ -6,7 +6,8 @@ export const JobPostSchema = z.object({
   // createdAt: z.date().nullable(),
   // updatedAt: z.date().nullable()
 });
-export const mySchema = "Hello Schema"
+export type JobPostType = z.infer<typeof JobPostSchema>;
+export const mySchema = "Hello Shared schema2 22 333";
 // module.exports = {
 //   JobPostSchema
 // }
