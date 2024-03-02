@@ -80,10 +80,11 @@ app.post(`/api/${job_posts}`, async (req, res) => {
     const validData = JobPostSchema.safeParse(body);
     if (!validData.success) {
       res.status(422).send("Invalid Data !");
-      throw new Error("Invalid Data !");
+      // throw new Error("Invalid Data !");
+      return;
     }
     const newData = {
-      ...validData,
+      ...validData.data,
       createdAt: Date.now(),
       // title: String(req.query.title) ?? "",
     };
