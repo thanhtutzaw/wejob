@@ -95,6 +95,7 @@ app.post(`/api/${job_posts}`, async (req, res) => {
     const body = req.body;
     const validData = JobPostSchema.safeParse(body);
     if (!validData.success) {
+      res.status(422).send("Invalid Data !");
       throw new Error("Invalid Data !");
     }
     const newData = {
