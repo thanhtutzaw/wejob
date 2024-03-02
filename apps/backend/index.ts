@@ -77,7 +77,10 @@ app.post(`/api/${job_posts}`, async (req, res) => {
       "Request Body:  " + req.body ? JSON.stringify(req.body) : req.body
     );
     const body = req.body;
-    const validData = JobPostSchema.parse(body);
+    const validData = JobPostSchema.safeParse(body);
+    if (!validData.success) {
+      throw new Error("Invalid Data !");
+    }
     // const validData = body;
     const newData = {
       ...validData,
@@ -95,7 +98,7 @@ app.post(`/api/${job_posts}`, async (req, res) => {
       .status(200);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      res.status(422).send(error.message);
+      res.status(422).send(error.message ?? error);
     }
     res.status(500).send("Internal Server Error" + error);
   }
