@@ -1,7 +1,6 @@
 {
   "recommendations": [
-    "Vue.volar",
-    "Vue.vscode-typescript-vue-plugin",
+    "jianglinghao.vscode-npm-scripts",
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode"
   ]

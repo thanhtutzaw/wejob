@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "turbo-clean": "turbo clean",
     "turbo-build": "turbo build",
     "turbo-start": "turbo start",
-    "turbo-clean": "turbo clean",
     "turbo-dev": "turbo dev --no-cache  --continue",
     "type-check": "tsc",
     "install-server": "cd apps/backend && npm install",
@@ -16,7 +16,7 @@
     "install-client": "cd apps/frontend && npm install",
     "dev-client": "cd apps/frontend && npm run dev",
     "build-client": "cd apps/frontend && npm run build",
-    "start-client": "cd apps/frontend && npm run preview",
+    "start-client": "cd apps/frontend && npm run start",
     "ts.check": "tsc --project ./apps/backend/tsconfig.json",
     "add-build": "git add ./apps/backend/dist"
   },

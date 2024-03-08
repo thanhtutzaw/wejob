@@ -2,12 +2,9 @@ import dotenv from "dotenv";
 dotenv.config();
 import Express from "express";
 import cors from "cors";
-// import { mySchema } from "../../packages/index";
 import { MongoClient, ObjectId } from "mongodb";
-// import { JobPostSchema , mySchema } from "../shared/JobPostSchema";
-import { JobPostSchema, type JobPostType } from "@wonjob/shared-types/index";
-
-import { z } from "zod";
+import { JobPostSchema, JobPostType, JobPostWithId, mySchema} from "@wonjob/shared-types/index";
+import { ZodDate, z } from "zod";
 const app = Express();
 const CONNECTION_STRING = process.env.MONGO_ATLAS_URL ?? "";
 const DB_NAME = "wonjobDB";
@@ -26,7 +23,8 @@ let client: MongoClient;
 client = new MongoClient(CONNECTION_STRING, {
   monitorCommands: true,
 });
-const jobPostCollection = client.db(DB_NAME).collection(job_posts);
+const db = client.db(DB_NAME);
+const jobPostCollection =db.collection(job_posts);
 
 app.listen(port, () => {
   console.log(`Listening: http://localhost:${port}`);
@@ -50,7 +48,9 @@ app.listen(port, () => {
 });
 app.get("/", (req, res) => {
   res.json({
-    message: `Hello Won Job API listening on ${port} . ${"mySchema"}`,
+    message: `Won Job API listening on ${port}.`,
+    sharedSchema: JobPostSchema,
+    testSchema: mySchema,
   });
 });
 app.get("/api", (req, res) => {
@@ -83,9 +83,10 @@ app.post(`/api/${job_posts}`, async (req, res) => {
       // throw new Error("Invalid Data !");
       return;
     }
-    const newData = {
+    const newData= {
       ...validData.data,
       createdAt: Date.now(),
+      _id:new ObjectId(validData.data._id)
       // title: String(req.query.title) ?? "",
     };
     console.log(newData);

@@ -6,6 +6,7 @@
     "src/**/*",
     "src/**/*.vue",
     "./formkit.config.ts",
+    "src/stores/.vuex.ts"
   ],
   "exclude": ["src/**/__tests__/*"],
   "compilerOptions": {

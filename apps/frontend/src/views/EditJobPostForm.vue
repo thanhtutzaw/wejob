@@ -1,11 +1,12 @@
 <script  setup lang="ts">
-import type { JobPost } from '@/types';
+// import type { JobPost } from '@/types';
+import type { JobPostType } from '@wonjob/shared-types';
 import { ref } from 'vue';
 const props = defineProps<{
 	resetForm: () => void;
 	closeModal: () => void;
 	submitEditForm: () => Promise<void>;
-	editModalForm: JobPost ;
+	editModalForm: JobPostType ;
 }>()
 const editLoading = ref(false)
 const emit = defineEmits(["update:modelValue"])

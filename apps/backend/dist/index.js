@@ -30,12 +30,13 @@ var import_mongodb = require("mongodb");
 // ../../packages/shared-types-won/src/JobPost.ts
 var import_zod = require("zod");
 var JobPostSchema = import_zod.z.object({
-  // _id: z.instanceof(ObjectId),
+  _id: import_zod.z.string(),
   title: import_zod.z.string().min(4).trim(),
-  description: import_zod.z.string().min(4).trim()
-  // createdAt: z.date().nullable(),
-  // updatedAt: z.date().nullable()
+  description: import_zod.z.string().min(4).trim(),
+  createdAt: import_zod.z.number(),
+  updatedAt: import_zod.z.date().nullable()
 });
+var mySchema = "Hello Shared schema test test test 111";
 
 // index.ts
 var import_zod2 = require("zod");
@@ -58,7 +59,8 @@ var client;
 client = new import_mongodb.MongoClient(CONNECTION_STRING, {
   monitorCommands: true
 });
-var jobPostCollection = client.db(DB_NAME).collection(job_posts);
+var db = client.db(DB_NAME);
+var jobPostCollection = db.collection(job_posts);
 app.listen(port, () => {
   console.log(`Listening: http://localhost:${port}`);
   console.log("Backend Node Env - " + process.env.NODE_ENV);
@@ -71,7 +73,9 @@ app.listen(port, () => {
 });
 app.get("/", (req, res) => {
   res.json({
-    message: `Hello Won Job API listening on ${port} . ${"mySchema"}`
+    message: `Won Job API listening on ${port}.`,
+    sharedSchema: JobPostSchema,
+    testSchema: mySchema
   });
 });
 app.get("/api", (req, res) => {
@@ -100,7 +104,8 @@ app.post(`/api/${job_posts}`, async (req, res) => {
     }
     const newData = {
       ...validData.data,
-      createdAt: Date.now()
+      createdAt: Date.now(),
+      _id: new import_mongodb.ObjectId(validData.data._id)
       // title: String(req.query.title) ?? "",
     };
     console.log(newData);

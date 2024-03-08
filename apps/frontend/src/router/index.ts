@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import StateMangamentView from '../views/StateMangament.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -9,20 +10,24 @@ const router = createRouter({
       name: 'home',
       component: HomeView
     },
-    // will match everything and put it under `$route.params.pathMatch`
+    {
+      path: '/admin',
+      name: 'admin',
+      component: () => import('../views/AdminView.vue')
+    },
+    {
+      path: '/statemangament',
+      name: 'statemangament',
+      component: StateMangamentView
+    },
     {
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
       component: () => import('../views/NotFoundPage.vue')
     },
-    // will match anything starting with `/user-` and put it under `$route.params.afterUser`
-    // { path: '/user-:afterUser(.*)', component:  },
     {
       path: '/about',
       name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/AboutView.vue')
     }
   ]
