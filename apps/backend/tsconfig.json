@@ -22,7 +22,6 @@
     "outDir": "dist",
     "rootDir": ".",
     "target": "ES2017",
-    "declaration": true,
     "sourceMap": true
 
   },
