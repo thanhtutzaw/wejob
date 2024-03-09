@@ -10,20 +10,18 @@
     "turbo-dev": "turbo dev --no-cache  --continue",
     "type-check": "tsc",
     "install-server": "cd apps/backend && npm install",
-    "build-ts-server": "cd apps/backend && npm run build",
+    "build-server": "cd apps/backend && npm run build",
     "start-server": "cd apps/backend && set NODE_ENV=production&& npm run start",
     "start-dev-server": "cd apps/backend && set NODE_ENV=development&& npm run dev",
     "install-client": "cd apps/frontend && npm install",
     "dev-client": "cd apps/frontend && npm run dev",
     "build-client": "cd apps/frontend && npm run build",
     "start-client": "cd apps/frontend && npm run start",
-    "ts.check": "tsc --project ./apps/backend/tsconfig.json",
-    "add-build": "git add ./apps/backend/dist"
+    "ts.check": "tsc --project ./apps/backend/tsconfig.json"
   },
   "pre-commit": [
     "ts.check",
-    "build-ts-server",
-    "add-build"
+    "build-server"
   ],
   "workspaces": [
     "apps/*",
