@@ -8,13 +8,12 @@
     "start": "set NODE_ENV=production && node dist/index.js",
     "dev": "set NODE_ENV=development&& npx nodemon index.ts",
     "ts.check": "tsc --project tsconfig.json",
-    "add-build": "git add dist",
+    "add-build2": "git add dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "pre-commit": [
     "ts.check",
-    "build",
-    "add-build"
+    "build"
   ],
   "keywords": [],
   "author": "",
